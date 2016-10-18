@@ -314,6 +314,7 @@ class Vector(val x: Int = 0.0, val y: Int = 0.0) {
     operator fun unaryMinus() = v(-x, -y)
     operator fun minus(v: Vector) = v(x - v.x, y - v.y)
     operator fun times(koef: Int) = v(x * koef, y * koef)
+    operator fun times(koef: Double) = v(x * koef, y * koef)
     infix fun distanceTo(v: Vector) = Math.sqrt((this - v).sqr)
     fun rotatedBy(theta: Double): Vector {
         val sin = Math.sin(theta)

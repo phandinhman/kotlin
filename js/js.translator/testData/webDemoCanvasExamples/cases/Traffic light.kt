@@ -483,6 +483,7 @@ abstract class Shape() {
 }
 
 class Vector(val x: Int = 0, val y: Int = 0) {
+    constructor(x: Double, y: Double) : this(x.toInt(), y.toInt())
     operator fun plus(v: Vector) = v(x + v.x, y + v.y)
     operator fun unaryMinus() = v(-x, -y)
     operator fun minus(v: Vector) = v(x - v.x, y - v.y)
