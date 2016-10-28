@@ -133,6 +133,7 @@ import org.jetbrains.kotlin.jps.incremental.AbstractProtoComparisonTest
 import org.jetbrains.kotlin.js.test.semantics.AbstractBoxJsTest
 import org.jetbrains.kotlin.js.test.semantics.AbstractJsCodegenBoxTest
 import org.jetbrains.kotlin.js.test.semantics.AbstractNonLocalReturnsTest
+import org.jetbrains.kotlin.js.test.semantics.AbstractPropertyAccessorsInlineTests
 import org.jetbrains.kotlin.jvm.compiler.*
 import org.jetbrains.kotlin.jvm.runtime.AbstractJvm8RuntimeDescriptorLoaderTest
 import org.jetbrains.kotlin.jvm.runtime.AbstractJvmRuntimeDescriptorLoaderTest
@@ -1189,6 +1190,10 @@ fun main(args: Array<String>) {
 
         testClass<AbstractNonLocalReturnsTest> {
             model("codegen/boxInline/nonLocalReturns/", targetBackend = TargetBackend.JS)
+        }
+
+        testClass<AbstractPropertyAccessorsInlineTests>() {
+            model("codegen/boxInline/property/", targetBackend = TargetBackend.JS)
         }
     }
 }

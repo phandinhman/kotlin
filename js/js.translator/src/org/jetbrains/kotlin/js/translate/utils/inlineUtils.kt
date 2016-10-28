@@ -44,10 +44,9 @@ import org.jetbrains.kotlin.resolve.inline.InlineStrategy
 fun setInlineCallMetadata(
         expression: JsExpression,
         psiElement: KtExpression,
-        resolvedCall: ResolvedCall<*>,
+        descriptor: CallableDescriptor,
         context: TranslationContext
 ) {
-    val descriptor = PsiUtils.getFunctionDescriptor(resolvedCall)
     assert(CallExpressionTranslator.shouldBeInlined(descriptor)) {
         "Expected descriptor of callable, that should be inlined, but got: $descriptor"
     }
@@ -68,6 +67,13 @@ fun setInlineCallMetadata(
 
     visitor.accept(expression)
 }
+
+fun setInlineCallMetadata(
+        expression: JsExpression,
+        psiElement: KtExpression,
+        resolvedCall: ResolvedCall<*>,
+        context: TranslationContext
+) = setInlineCallMetadata(expression, psiElement, PsiUtils.getFunctionDescriptor(resolvedCall), context)
 
 fun TranslationContext.aliasedName(descriptor: CallableDescriptor): JsName {
     val alias = getAliasForDescriptor(descriptor)

@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.js.translate.reference;
 import com.google.dart.compiler.backend.js.ast.JsExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.descriptors.VariableDescriptor;
+import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.js.translate.callTranslator.CallTranslator;
 import org.jetbrains.kotlin.js.translate.context.TranslationContext;
 import org.jetbrains.kotlin.js.translate.general.AbstractTranslator;
@@ -27,6 +27,9 @@ import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.calls.callUtil.CallUtilKt;
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall;
 import org.jetbrains.kotlin.resolve.calls.model.VariableAsFunctionResolvedCall;
+import org.jetbrains.kotlin.resolve.inline.InlineUtil;
+
+import static org.jetbrains.kotlin.js.translate.utils.InlineUtils.setInlineCallMetadata;
 
 public class VariableAccessTranslator extends AbstractTranslator implements AccessTranslator {
     public static VariableAccessTranslator newInstance(
@@ -39,19 +42,22 @@ public class VariableAccessTranslator extends AbstractTranslator implements Acce
             resolvedCall = ((VariableAsFunctionResolvedCall) resolvedCall).getVariableCall();
         }
         assert resolvedCall.getResultingDescriptor() instanceof VariableDescriptor;
-        return new VariableAccessTranslator(context, (ResolvedCall<? extends VariableDescriptor>) resolvedCall, receiver);
+        return new VariableAccessTranslator(context, referenceExpression, (ResolvedCall<? extends VariableDescriptor>) resolvedCall, receiver);
     }
 
 
     private final ResolvedCall<? extends VariableDescriptor> resolvedCall;
+    private final KtReferenceExpression referenceExpression;
     private final JsExpression receiver;
 
     private VariableAccessTranslator(
             @NotNull TranslationContext context,
+            @NotNull KtReferenceExpression referenceExpression,
             @NotNull ResolvedCall<? extends VariableDescriptor> resolvedCall,
             @Nullable JsExpression receiver
     ) {
         super(context);
+        this.referenceExpression = referenceExpression;
         this.receiver = receiver;
         this.resolvedCall = resolvedCall;
     }
@@ -59,29 +65,46 @@ public class VariableAccessTranslator extends AbstractTranslator implements Acce
     @NotNull
     @Override
     public JsExpression translateAsGet() {
-        return CallTranslator.INSTANCE.translateGet(context(), resolvedCall, receiver);
+        JsExpression e = CallTranslator.INSTANCE.translateGet(context(), resolvedCall, receiver);
+        CallableDescriptor original = resolvedCall.getResultingDescriptor().getOriginal();
+        if (original instanceof PropertyDescriptor) {
+            PropertyGetterDescriptor getter = ((PropertyDescriptor)original).getGetter();
+            if (InlineUtil.isInline(getter)) {
+                setInlineCallMetadata(e, referenceExpression, getter, context());
+            }
+        }
+        return e;
     }
 
     @NotNull
     @Override
     public JsExpression translateAsSet(@NotNull JsExpression setTo) {
-        return CallTranslator.INSTANCE.translateSet(context(), resolvedCall, setTo, receiver);
+        JsExpression e = CallTranslator.INSTANCE.translateSet(context(), resolvedCall, setTo, receiver);
+        CallableDescriptor original = resolvedCall.getResultingDescriptor().getOriginal();
+        if (original instanceof PropertyDescriptor) {
+            PropertySetterDescriptor setter = ((PropertyDescriptor)original).getSetter();
+            if (InlineUtil.isInline(setter)) {
+                setInlineCallMetadata(e, referenceExpression, setter, context());
+            }
+        }
+        return e;
     }
 
     @NotNull
     @Override
     public AccessTranslator getCached() {
         JsExpression cachedReceiver = receiver != null ? context().cacheExpressionIfNeeded(receiver) : null;
-        return new CachedVariableAccessTranslator(context(), resolvedCall, cachedReceiver);
+        return new CachedVariableAccessTranslator(context(), referenceExpression, resolvedCall, cachedReceiver);
     }
 
     private static class CachedVariableAccessTranslator extends VariableAccessTranslator implements AccessTranslator {
         public CachedVariableAccessTranslator(
                 @NotNull TranslationContext context,
+                @NotNull KtReferenceExpression referenceExpression,
                 @NotNull  ResolvedCall<? extends VariableDescriptor> resolvedCall,
                 @Nullable JsExpression cachedReceiver
         ) {
-            super(context, resolvedCall, cachedReceiver);
+            super(context, referenceExpression, resolvedCall, cachedReceiver);
         }
 
         @NotNull
