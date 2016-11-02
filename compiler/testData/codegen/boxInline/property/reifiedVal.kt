@@ -1,10 +1,10 @@
-// TARGET_BACKEND: JVM
 // WITH_RUNTIME
+// WITH_REFLECT
 // FILE: 1.kt
 package test
 
 inline val <reified T: Any> T.value: String
-    get() = T::class.java.simpleName
+    get() = T::class.simpleName!!
 
 // FILE: 2.kt
 import test.*
@@ -12,5 +12,5 @@ import test.*
 class OK
 
 fun box(): String {
-    return OK().value
+    return OK().value ?: "fail"
 }
