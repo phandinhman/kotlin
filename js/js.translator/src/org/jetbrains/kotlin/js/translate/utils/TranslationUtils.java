@@ -52,21 +52,21 @@ public final class TranslationUtils {
     public static JsPropertyInitializer translateFunctionAsEcma5PropertyDescriptor(@NotNull JsFunction function,
             @NotNull FunctionDescriptor descriptor,
             @NotNull TranslationContext context) {
-        JsExpression functionOrInvocation = function;
+        JsExpression functionExpression = function;
         if (InlineUtil.isInline(descriptor)) {
             InlineMetadata metadata = InlineMetadata.compose(function, descriptor);
-            functionOrInvocation = metadata.getFunctionWithMetadata();
+            functionExpression = metadata.getFunctionWithMetadata();
         }
 
         if (DescriptorUtils.isExtension(descriptor) ||
             descriptor instanceof PropertyAccessorDescriptor &&
             shouldAccessViaFunctions(((PropertyAccessorDescriptor) descriptor).getCorrespondingProperty())
         ) {
-            return translateExtensionFunctionAsEcma5DataDescriptor(functionOrInvocation, descriptor, context);
+            return translateExtensionFunctionAsEcma5DataDescriptor(functionExpression, descriptor, context);
         }
         else {
             JsStringLiteral getOrSet = context.program().getStringLiteral(getAccessorFunctionName(descriptor));
-            return new JsPropertyInitializer(getOrSet, functionOrInvocation);
+            return new JsPropertyInitializer(getOrSet, functionExpression);
         }
     }
 
@@ -82,9 +82,9 @@ public final class TranslationUtils {
     }
 
     @NotNull
-    private static JsPropertyInitializer translateExtensionFunctionAsEcma5DataDescriptor(@NotNull JsExpression functionOrInvocation,
+    private static JsPropertyInitializer translateExtensionFunctionAsEcma5DataDescriptor(@NotNull JsExpression functionExpression,
             @NotNull FunctionDescriptor descriptor, @NotNull TranslationContext context) {
-        JsObjectLiteral meta = createDataDescriptor(functionOrInvocation, ModalityKt.isOverridable(descriptor), false);
+        JsObjectLiteral meta = createDataDescriptor(functionExpression, ModalityKt.isOverridable(descriptor), false);
         return new JsPropertyInitializer(context.getNameForDescriptor(descriptor).makeRef(), meta);
     }
 

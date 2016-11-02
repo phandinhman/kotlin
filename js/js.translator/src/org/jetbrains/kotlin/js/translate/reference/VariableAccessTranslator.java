@@ -42,7 +42,8 @@ public class VariableAccessTranslator extends AbstractTranslator implements Acce
             resolvedCall = ((VariableAsFunctionResolvedCall) resolvedCall).getVariableCall();
         }
         assert resolvedCall.getResultingDescriptor() instanceof VariableDescriptor;
-        return new VariableAccessTranslator(context, referenceExpression, (ResolvedCall<? extends VariableDescriptor>) resolvedCall, receiver);
+        return new VariableAccessTranslator(context, referenceExpression, (ResolvedCall<? extends VariableDescriptor>) resolvedCall,
+                                            receiver);
     }
 
 
@@ -68,7 +69,7 @@ public class VariableAccessTranslator extends AbstractTranslator implements Acce
         JsExpression e = CallTranslator.INSTANCE.translateGet(context(), resolvedCall, receiver);
         CallableDescriptor original = resolvedCall.getResultingDescriptor().getOriginal();
         if (original instanceof PropertyDescriptor) {
-            PropertyGetterDescriptor getter = ((PropertyDescriptor)original).getGetter();
+            PropertyGetterDescriptor getter = ((PropertyDescriptor) original).getGetter();
             if (InlineUtil.isInline(getter)) {
                 setInlineCallMetadata(e, referenceExpression, getter, context());
             }
