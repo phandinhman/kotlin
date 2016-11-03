@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.resolve
 
+import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.builtins.getReceiverTypeFromFunctionType
 import org.jetbrains.kotlin.builtins.getValueParameterTypesFromFunctionType
@@ -29,6 +30,8 @@ import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.diagnostics.DiagnosticUtils
 import org.jetbrains.kotlin.diagnostics.Errors.*
+import org.jetbrains.kotlin.fir.FirClassOrObject
+import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.*
@@ -246,7 +249,7 @@ class FunctionDescriptorResolver(
     fun resolvePrimaryConstructorDescriptor(
             scope: LexicalScope,
             classDescriptor: ClassDescriptor,
-            classElement: KtClassOrObject,
+            classElement: FirClassOrObject,
             trace: BindingTrace
     ): ClassConstructorDescriptorImpl? {
         if (classDescriptor.getKind() == ClassKind.ENUM_ENTRY || !classElement.hasPrimaryConstructor()) return null
@@ -283,7 +286,7 @@ class FunctionDescriptorResolver(
             classDescriptor: ClassDescriptor,
             isPrimary: Boolean,
             modifierList: KtModifierList?,
-            declarationToTrace: KtDeclaration,
+            declarationToTrace: FirElement,
             valueParameters: List<KtParameter>,
             trace: BindingTrace
     ): ClassConstructorDescriptorImpl {
@@ -293,7 +296,8 @@ class FunctionDescriptorResolver(
                 isPrimary,
                 declarationToTrace.toSourceElement()
         )
-        trace.record(BindingContext.CONSTRUCTOR, declarationToTrace, constructorDescriptor)
+        if (declarationToTrace is PsiElement)
+            trace.record(BindingContext.CONSTRUCTOR, declarationToTrace, constructorDescriptor)
         val parameterScope = LexicalWritableScope(
                 scope,
                 constructorDescriptor,

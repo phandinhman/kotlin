@@ -98,4 +98,16 @@ public class KtLambdaExpression extends LazyParseablePsiElement implements KtExp
     public String toString() {
         return getNode().getElementType().toString();
     }
+
+    @Nullable
+    @Override
+    public KtElement getKt() {
+        return this;
+    }
+
+    @NotNull
+    @Override
+    public KtElement getPsiOrParent() {
+        return this;
+    }
 }

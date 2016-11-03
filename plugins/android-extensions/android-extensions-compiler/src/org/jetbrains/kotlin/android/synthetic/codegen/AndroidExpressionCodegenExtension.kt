@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension
 import org.jetbrains.kotlin.codegen.state.GenerationState
 import org.jetbrains.kotlin.codegen.state.KotlinTypeMapper
 import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.fir.FirClassOrObject
 import org.jetbrains.kotlin.load.java.lazy.descriptors.LazyJavaClassDescriptor
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.resolve.DescriptorUtils
@@ -247,10 +248,11 @@ class AndroidExpressionCodegenExtension : ExpressionCodegenExtension {
     override fun generateClassSyntheticParts(
             classBuilder: ClassBuilder,
             state: GenerationState,
-            classOrObject: KtClassOrObject,
+            classOrObject: FirClassOrObject,
             descriptor: ClassDescriptor
     ) {
         if (descriptor.kind != ClassKind.CLASS || descriptor.isInner || DescriptorUtils.isLocal(descriptor)) return
+        if (classOrObject !is KtClassOrObject) return // works only only on physically classes, not synthetic ones
 
         // Do not generate anything if class is not supported
         val androidClassType = AndroidClassType.getClassType(descriptor)
