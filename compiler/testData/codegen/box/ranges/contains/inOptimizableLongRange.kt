@@ -2,7 +2,9 @@
 
 fun check(x: Long, left: Long, right: Long): Boolean {
     val result = x in left..right
-    assert(result == checkUnoptimized(x, left..right))
+    val manual = x >= left && x <= right
+    assert(result == checkUnoptimized(x, left..right)) { "Failed: optimized === unoptimized" }
+    assert(result == manual) { "Failed: optimized === manual" }
     return result
 }
 
