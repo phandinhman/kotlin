@@ -295,6 +295,6 @@ public final class TranslationUtils {
         for (PropertyDescriptor overriddenProperty : property.getOverriddenDescriptors()) {
             if (shouldAccessViaFunctions(overriddenProperty)) return true;
         }
-        return InlineUtil.hasInlineAccessors(property);
+        return false;
     }
 }

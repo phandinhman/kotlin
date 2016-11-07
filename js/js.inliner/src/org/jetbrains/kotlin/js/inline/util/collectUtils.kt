@@ -21,6 +21,7 @@ import com.google.dart.compiler.backend.js.ast.metadata.staticRef
 import org.jetbrains.kotlin.js.inline.util.collectors.InstanceCollector
 import org.jetbrains.kotlin.js.translate.expression.InlineMetadata
 import org.jetbrains.kotlin.js.translate.utils.JsAstUtils
+import org.jetbrains.kotlin.js.translate.utils.name
 import java.util.*
 
 fun collectFunctionReferencesInside(scope: JsNode): List<JsName> =
@@ -176,6 +177,26 @@ fun collectNamedFunctionsAndMetadata(scope: JsNode): Map<JsName, Pair<JsFunction
     })
 
     return namedFunctions
+}
+
+fun collectAccessors(scope: JsNode): Map<String, JsFunction> {
+    val accessors = hashMapOf<String, JsFunction>()
+
+    scope.accept(object : RecursiveJsVisitor() {
+        override fun visitPropertyInitializer(x: JsPropertyInitializer) {
+            super.visitPropertyInitializer(x)
+
+            if (x.labelExpr is JsNameRef) {
+                (x.valueExpr as? JsObjectLiteral)?.propertyInitializers?.forEach {
+                    InlineMetadata.decompose(it.valueExpr)?.let {
+                        accessors[it.tag.value] = it.function
+                    }
+                }
+            }
+        }
+    })
+
+    return accessors
 }
 
 fun <T : JsNode> collectInstances(klass: Class<T>, scope: JsNode): List<T> {
