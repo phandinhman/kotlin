@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.idea.facet
 
+import com.intellij.openapi.externalSystem.service.project.IdeModifiableModelsProvider
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.projectRoots.JavaSdkVersion
@@ -100,7 +101,7 @@ internal fun getLibraryLanguageLevel(
     return getDefaultLanguageLevel(module, minVersion)
 }
 
-internal fun KotlinFacetSettings.initializeIfNeeded(module: Module, rootModel: ModuleRootModel?) {
+fun KotlinFacetSettings.initializeIfNeeded(module: Module, rootModel: ModuleRootModel?) {
     val project = module.project
 
     with(versionInfo) {
@@ -137,3 +138,13 @@ val TargetPlatformKind<*>.mavenLibraryId: String
         is TargetPlatformKind.Jvm -> KotlinJavaMavenConfigurator.STD_LIB_ID
         is TargetPlatformKind.JavaScript -> KotlinJavascriptMavenConfigurator.STD_LIB_ID
     }
+
+fun Module.getOrCreateFacet(modelsProvider: IdeModifiableModelsProvider): KotlinFacet {
+    val facetModel = modelsProvider.getModifiableFacetModel(this)
+
+    facetModel.findFacet(KotlinFacetType.TYPE_ID, KotlinFacetType.INSTANCE.defaultFacetName)?.let { return it }
+
+    val facet = with(KotlinFacetType.INSTANCE) { createFacet(this@getOrCreateFacet, defaultFacetName, createDefaultConfiguration(), null) }
+    facetModel.addFacet(facet)
+    return facet
+}

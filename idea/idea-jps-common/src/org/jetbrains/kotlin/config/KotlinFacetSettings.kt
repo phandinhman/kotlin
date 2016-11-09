@@ -34,6 +34,7 @@ sealed class TargetPlatformKind<out Version : DescriptionAware>(
     class Jvm(version: JvmTarget) : TargetPlatformKind<JvmTarget>(version, "JVM") {
         companion object {
             val JVM_PLATFORMS by lazy { JvmTarget.values().map(::Jvm) }
+            val LATEST = this[JvmTarget.JVM_1_8]
 
             operator fun get(version: JvmTarget) = JVM_PLATFORMS[version.ordinal]
         }
