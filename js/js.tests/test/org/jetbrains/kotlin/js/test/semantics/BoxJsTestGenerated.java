@@ -3854,6 +3854,12 @@ public class BoxJsTestGenerated extends AbstractBoxJsTest {
             doTest(fileName);
         }
 
+        @TestMetadata("property.kt")
+        public void testProperty() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inline/property.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("rootConstructor.kt")
         public void testRootConstructor() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inline/rootConstructor.kt");
