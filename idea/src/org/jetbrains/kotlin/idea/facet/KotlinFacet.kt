@@ -18,7 +18,11 @@ package org.jetbrains.kotlin.idea.facet
 
 import com.intellij.facet.Facet
 import com.intellij.facet.FacetManager.getInstance
+import com.intellij.framework.detection.impl.FrameworkDetectionContextImpl
+import com.intellij.framework.detection.impl.FrameworkDetectionUtil
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.roots.PlatformModifiableModelsProvider
+import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider
 
 class KotlinFacet(
         module: Module,
@@ -29,6 +33,19 @@ class KotlinFacet(
         fun get(module: Module): KotlinFacet? {
             if (module.isDisposed) return null
             return getInstance(module).getFacetByType<KotlinFacet>(KotlinFacetType.TYPE_ID)
+        }
+
+        fun configureIfNeeded(module: Module): KotlinFacet? {
+            get(module)?.let { return it }
+
+            val project = module.project
+            FrameworkDetectionUtil.setupFrameworks(
+                    KotlinFrameworkDetector().internalDetect(emptyList(), FrameworkDetectionContextImpl(project)),
+                    PlatformModifiableModelsProvider(),
+                    DefaultModulesProvider(project)
+            )
+
+            return get(module)
         }
     }
 }
