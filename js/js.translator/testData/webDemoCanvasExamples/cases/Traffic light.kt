@@ -499,7 +499,7 @@ class Vector(val x: Int = 0, val y: Int = 0) {
                                                   (y >= topLeft.y) && (y <= topLeft.y + size.y)
 
     val sqr: Double
-        get() = x * x + y * y
+        get() = x * x.toDouble() + y * y
     val normalized: Vector
         get() = this * (1.0 / Math.sqrt(sqr))
 }
