@@ -158,7 +158,7 @@ public final class FunctionTranslator extends AbstractTranslator {
         return jsParameters;
     }
 
-    private List<TypeParameterDescriptor> getTypeParameters(FunctionDescriptor functionDescriptor) {
+    private static List<TypeParameterDescriptor> getTypeParameters(FunctionDescriptor functionDescriptor) {
         if (functionDescriptor instanceof PropertyAccessorDescriptor) {
             return ((PropertyAccessorDescriptor) functionDescriptor).getCorrespondingProperty().getTypeParameters();
         }
