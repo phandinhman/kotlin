@@ -21015,6 +21015,12 @@ public class DiagnosticsTestGenerated extends AbstractDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("typeAliasAsBareType.kt")
+            public void testTypeAliasAsBareType() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/typealias/typeAliasAsBareType.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("typeAliasAsQualifier.kt")
             public void testTypeAliasAsQualifier() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/typealias/typeAliasAsQualifier.kt");
