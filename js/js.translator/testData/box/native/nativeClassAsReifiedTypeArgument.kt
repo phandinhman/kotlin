@@ -2,7 +2,7 @@
 
 var global = ""
 
-inline fun <reified T> log(x: T) {
+inline fun <reified T : Any> log(x: T) {
     global += jsClass<T>().name + ": " + x
 }
 
