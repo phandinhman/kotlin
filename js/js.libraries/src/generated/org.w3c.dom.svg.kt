@@ -34,15 +34,15 @@ import org.w3c.xhr.*
     fun blur(): Unit = noImpl
 }
 
-@native public abstract class SVGBoundingBoxOptions {
-    open var fill: Boolean = true
-    open var stroke: Boolean = false
-    open var markers: Boolean = false
-    open var clipped: Boolean = false
+@native public interface SVGBoundingBoxOptions {
+    var fill: Boolean? /* = true */
+    var stroke: Boolean? /* = false */
+    var markers: Boolean? /* = false */
+    var clipped: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun SVGBoundingBoxOptions(fill: Boolean = true, stroke: Boolean = false, markers: Boolean = false, clipped: Boolean = false): SVGBoundingBoxOptions {
+public inline fun SVGBoundingBoxOptions(fill: Boolean? = true, stroke: Boolean? = false, markers: Boolean? = false, clipped: Boolean? = false): SVGBoundingBoxOptions {
     val o = js("({})")
 
     o["fill"] = fill

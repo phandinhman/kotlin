@@ -20,19 +20,19 @@ import org.w3c.performance.*
 import org.w3c.workers.*
 import org.w3c.xhr.*
 
-@native public abstract class WebGLContextAttributes {
-    open var alpha: Boolean = true
-    open var depth: Boolean = true
-    open var stencil: Boolean = false
-    open var antialias: Boolean = true
-    open var premultipliedAlpha: Boolean = true
-    open var preserveDrawingBuffer: Boolean = false
-    open var preferLowPowerToHighPerformance: Boolean = false
-    open var failIfMajorPerformanceCaveat: Boolean = false
+@native public interface WebGLContextAttributes {
+    var alpha: Boolean? /* = true */
+    var depth: Boolean? /* = true */
+    var stencil: Boolean? /* = false */
+    var antialias: Boolean? /* = true */
+    var premultipliedAlpha: Boolean? /* = true */
+    var preserveDrawingBuffer: Boolean? /* = false */
+    var preferLowPowerToHighPerformance: Boolean? /* = false */
+    var failIfMajorPerformanceCaveat: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun WebGLContextAttributes(alpha: Boolean = true, depth: Boolean = true, stencil: Boolean = false, antialias: Boolean = true, premultipliedAlpha: Boolean = true, preserveDrawingBuffer: Boolean = false, preferLowPowerToHighPerformance: Boolean = false, failIfMajorPerformanceCaveat: Boolean = false): WebGLContextAttributes {
+public inline fun WebGLContextAttributes(alpha: Boolean? = true, depth: Boolean? = true, stencil: Boolean? = false, antialias: Boolean? = true, premultipliedAlpha: Boolean? = true, preserveDrawingBuffer: Boolean? = false, preferLowPowerToHighPerformance: Boolean? = false, failIfMajorPerformanceCaveat: Boolean? = false): WebGLContextAttributes {
     val o = js("({})")
 
     o["alpha"] = alpha
@@ -856,12 +856,12 @@ public inline fun WebGLContextAttributes(alpha: Boolean = true, depth: Boolean =
         get() = noImpl
 }
 
-@native public abstract class WebGLContextEventInit : EventInit() {
-    open var statusMessage: String = ""
+@native public interface WebGLContextEventInit : EventInit {
+    var statusMessage: String? /* = "" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun WebGLContextEventInit(statusMessage: String = "", bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): WebGLContextEventInit {
+public inline fun WebGLContextEventInit(statusMessage: String? = "", bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): WebGLContextEventInit {
     val o = js("({})")
 
     o["statusMessage"] = statusMessage

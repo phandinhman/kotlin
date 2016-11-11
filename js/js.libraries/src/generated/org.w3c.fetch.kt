@@ -68,23 +68,23 @@ import org.w3c.xhr.*
     fun clone(): Request = noImpl
 }
 
-@native public abstract class RequestInit {
-    abstract var method: String
-    abstract var headers: dynamic
-    abstract var body: dynamic
-    abstract var referrer: String
-    abstract var referrerPolicy: dynamic
-    abstract var mode: String
-    abstract var credentials: String
-    abstract var cache: String
-    abstract var redirect: String
-    abstract var integrity: String
-    abstract var keepalive: Boolean
-    abstract var window: Any?
+@native public interface RequestInit {
+    var method: String?
+    var headers: dynamic
+    var body: dynamic
+    var referrer: String?
+    var referrerPolicy: dynamic
+    var mode: String?
+    var credentials: String?
+    var cache: String?
+    var redirect: String?
+    var integrity: String?
+    var keepalive: Boolean?
+    var window: Any?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun RequestInit(method: String, headers: dynamic, body: dynamic, referrer: String, referrerPolicy: dynamic, mode: String, credentials: String, cache: String, redirect: String, integrity: String, keepalive: Boolean, window: Any?): RequestInit {
+public inline fun RequestInit(method: String?, headers: dynamic, body: dynamic, referrer: String?, referrerPolicy: dynamic, mode: String?, credentials: String?, cache: String?, redirect: String?, integrity: String?, keepalive: Boolean?, window: Any?): RequestInit {
     val o = js("({})")
 
     o["method"] = method
@@ -130,14 +130,14 @@ public inline fun RequestInit(method: String, headers: dynamic, body: dynamic, r
     }
 }
 
-@native public abstract class ResponseInit {
-    open var status: Short = 200
-    open var statusText: String = "OK"
-    abstract var headers: dynamic
+@native public interface ResponseInit {
+    var status: Short? /* = 200 */
+    var statusText: String? /* = "OK" */
+    var headers: dynamic
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ResponseInit(status: Short = 200, statusText: String = "OK", headers: dynamic): ResponseInit {
+public inline fun ResponseInit(status: Short? = 200, statusText: String? = "OK", headers: dynamic): ResponseInit {
     val o = js("({})")
 
     o["status"] = status

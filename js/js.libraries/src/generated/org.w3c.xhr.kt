@@ -114,14 +114,14 @@ import org.w3c.workers.*
         get() = noImpl
 }
 
-@native public abstract class ProgressEventInit : EventInit() {
-    open var lengthComputable: Boolean = false
-    open var loaded: Int = 0
-    open var total: Int = 0
+@native public interface ProgressEventInit : EventInit {
+    var lengthComputable: Boolean? /* = false */
+    var loaded: Int? /* = 0 */
+    var total: Int? /* = 0 */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ProgressEventInit(lengthComputable: Boolean = false, loaded: Int = 0, total: Int = 0, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): ProgressEventInit {
+public inline fun ProgressEventInit(lengthComputable: Boolean? = false, loaded: Int? = 0, total: Int? = 0, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): ProgressEventInit {
     val o = js("({})")
 
     o["lengthComputable"] = lengthComputable

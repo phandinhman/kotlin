@@ -76,28 +76,28 @@ import org.w3c.xhr.*
     }
 }
 
-@native public abstract class NotificationOptions {
-    open var dir: String = "auto"
-    open var lang: String = ""
-    open var body: String = ""
-    open var tag: String = ""
-    abstract var image: String
-    abstract var icon: String
-    abstract var badge: String
-    abstract var sound: String
-    abstract var vibrate: dynamic
-    abstract var timestamp: Number
-    open var renotify: Boolean = false
-    open var silent: Boolean = false
-    open var noscreen: Boolean = false
-    open var requireInteraction: Boolean = false
-    open var sticky: Boolean = false
-    open var data: Any? = null
-    open var actions: Array<NotificationAction> = arrayOf()
+@native public interface NotificationOptions {
+    var dir: String? /* = "auto" */
+    var lang: String? /* = "" */
+    var body: String? /* = "" */
+    var tag: String? /* = "" */
+    var image: String?
+    var icon: String?
+    var badge: String?
+    var sound: String?
+    var vibrate: dynamic
+    var timestamp: Number?
+    var renotify: Boolean? /* = false */
+    var silent: Boolean? /* = false */
+    var noscreen: Boolean? /* = false */
+    var requireInteraction: Boolean? /* = false */
+    var sticky: Boolean? /* = false */
+    var data: Any? /* = null */
+    var actions: Array<NotificationAction>? /* = arrayOf() */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun NotificationOptions(dir: String = "auto", lang: String = "", body: String = "", tag: String = "", image: String, icon: String, badge: String, sound: String, vibrate: dynamic, timestamp: Number, renotify: Boolean = false, silent: Boolean = false, noscreen: Boolean = false, requireInteraction: Boolean = false, sticky: Boolean = false, data: Any? = null, actions: Array<NotificationAction> = arrayOf()): NotificationOptions {
+public inline fun NotificationOptions(dir: String? = "auto", lang: String? = "", body: String? = "", tag: String? = "", image: String?, icon: String?, badge: String?, sound: String?, vibrate: dynamic, timestamp: Number?, renotify: Boolean? = false, silent: Boolean? = false, noscreen: Boolean? = false, requireInteraction: Boolean? = false, sticky: Boolean? = false, data: Any? = null, actions: Array<NotificationAction>? = arrayOf()): NotificationOptions {
     val o = js("({})")
 
     o["dir"] = dir
@@ -121,14 +121,14 @@ public inline fun NotificationOptions(dir: String = "auto", lang: String = "", b
     return o
 }
 
-@native public abstract class NotificationAction {
-    abstract var action: String
-    abstract var title: String
-    abstract var icon: String
+@native public interface NotificationAction {
+    var action: String?
+    var title: String?
+    var icon: String?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun NotificationAction(action: String, title: String, icon: String): NotificationAction {
+public inline fun NotificationAction(action: String?, title: String?, icon: String?): NotificationAction {
     val o = js("({})")
 
     o["action"] = action
@@ -138,12 +138,12 @@ public inline fun NotificationAction(action: String, title: String, icon: String
     return o
 }
 
-@native public abstract class GetNotificationOptions {
-    open var tag: String = ""
+@native public interface GetNotificationOptions {
+    var tag: String? /* = "" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun GetNotificationOptions(tag: String = ""): GetNotificationOptions {
+public inline fun GetNotificationOptions(tag: String? = ""): GetNotificationOptions {
     val o = js("({})")
 
     o["tag"] = tag
@@ -158,13 +158,13 @@ public inline fun GetNotificationOptions(tag: String = ""): GetNotificationOptio
         get() = noImpl
 }
 
-@native public abstract class NotificationEventInit : ExtendableEventInit() {
-    abstract var notification: Notification
-    open var action: String = ""
+@native public interface NotificationEventInit : ExtendableEventInit {
+    var notification: Notification?
+    var action: String? /* = "" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun NotificationEventInit(notification: Notification, action: String = "", bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): NotificationEventInit {
+public inline fun NotificationEventInit(notification: Notification?, action: String? = "", bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): NotificationEventInit {
     val o = js("({})")
 
     o["notification"] = notification

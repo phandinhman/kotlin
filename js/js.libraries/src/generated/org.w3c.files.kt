@@ -31,12 +31,12 @@ import org.w3c.xhr.*
     fun close(): Unit = noImpl
 }
 
-@native public abstract class BlobPropertyBag {
-    open var type: String = ""
+@native public interface BlobPropertyBag {
+    var type: String? /* = "" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun BlobPropertyBag(type: String = ""): BlobPropertyBag {
+public inline fun BlobPropertyBag(type: String? = ""): BlobPropertyBag {
     val o = js("({})")
 
     o["type"] = type
@@ -51,12 +51,12 @@ public inline fun BlobPropertyBag(type: String = ""): BlobPropertyBag {
         get() = noImpl
 }
 
-@native public abstract class FilePropertyBag : BlobPropertyBag() {
-    abstract var lastModified: Int
+@native public interface FilePropertyBag : BlobPropertyBag {
+    var lastModified: Int?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun FilePropertyBag(lastModified: Int, type: String = ""): FilePropertyBag {
+public inline fun FilePropertyBag(lastModified: Int?, type: String? = ""): FilePropertyBag {
     val o = js("({})")
 
     o["lastModified"] = lastModified

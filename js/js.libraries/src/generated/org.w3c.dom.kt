@@ -1244,12 +1244,12 @@ import org.w3c.xhr.*
         get() = noImpl
 }
 
-@native public abstract class TrackEventInit : EventInit() {
-    open var track: UnionAudioTrackOrTextTrackOrVideoTrack? = null
+@native public interface TrackEventInit : EventInit {
+    var track: UnionAudioTrackOrTextTrackOrVideoTrack? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun TrackEventInit(track: UnionAudioTrackOrTextTrackOrVideoTrack? = null, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): TrackEventInit {
+public inline fun TrackEventInit(track: UnionAudioTrackOrTextTrackOrVideoTrack? = null, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): TrackEventInit {
     val o = js("({})")
 
     o["track"] = track
@@ -2100,12 +2100,12 @@ public inline fun TrackEventInit(track: UnionAudioTrackOrTextTrackOrVideoTrack? 
         get() = noImpl
 }
 
-@native public abstract class RelatedEventInit : EventInit() {
-    open var relatedTarget: EventTarget? = null
+@native public interface RelatedEventInit : EventInit {
+    var relatedTarget: EventTarget? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun RelatedEventInit(relatedTarget: EventTarget? = null, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): RelatedEventInit {
+public inline fun RelatedEventInit(relatedTarget: EventTarget? = null, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): RelatedEventInit {
     val o = js("({})")
 
     o["relatedTarget"] = relatedTarget
@@ -2173,12 +2173,12 @@ public inline fun RelatedEventInit(relatedTarget: EventTarget? = null, bubbles: 
     fun assignedNodes(options: AssignedNodesOptions = noImpl): Array<Node> = noImpl
 }
 
-@native public abstract class AssignedNodesOptions {
-    open var flatten: Boolean = false
+@native public interface AssignedNodesOptions {
+    var flatten: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun AssignedNodesOptions(flatten: Boolean = false): AssignedNodesOptions {
+public inline fun AssignedNodesOptions(flatten: Boolean? = false): AssignedNodesOptions {
     val o = js("({})")
 
     o["flatten"] = flatten
@@ -2198,12 +2198,12 @@ public inline fun AssignedNodesOptions(flatten: Boolean = false): AssignedNodesO
     fun toBlob(_callback: (Blob?) -> Unit, type: String = noImpl, quality: Any? = noImpl): Unit = noImpl
 }
 
-@native public abstract class CanvasRenderingContext2DSettings {
-    open var alpha: Boolean = true
+@native public interface CanvasRenderingContext2DSettings {
+    var alpha: Boolean? /* = true */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun CanvasRenderingContext2DSettings(alpha: Boolean = true): CanvasRenderingContext2DSettings {
+public inline fun CanvasRenderingContext2DSettings(alpha: Boolean? = true): CanvasRenderingContext2DSettings {
     val o = js("({})")
 
     o["alpha"] = alpha
@@ -2420,19 +2420,19 @@ public inline fun CanvasRenderingContext2DSettings(alpha: Boolean = true): Canva
         get() = noImpl
 }
 
-@native public abstract class HitRegionOptions {
-    open var path: Path2D? = null
-    open var fillRule: String = "nonzero"
-    open var id: String = ""
-    open var parentID: String? = null
-    open var cursor: String = "inherit"
-    open var control: Element? = null
-    open var label: String? = null
-    open var role: String? = null
+@native public interface HitRegionOptions {
+    var path: Path2D? /* = null */
+    var fillRule: String? /* = "nonzero" */
+    var id: String? /* = "" */
+    var parentID: String? /* = null */
+    var cursor: String? /* = "inherit" */
+    var control: Element? /* = null */
+    var label: String? /* = null */
+    var role: String? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun HitRegionOptions(path: Path2D? = null, fillRule: String = "nonzero", id: String = "", parentID: String? = null, cursor: String = "inherit", control: Element? = null, label: String? = null, role: String? = null): HitRegionOptions {
+public inline fun HitRegionOptions(path: Path2D? = null, fillRule: String? = "nonzero", id: String? = "", parentID: String? = null, cursor: String? = "inherit", control: Element? = null, label: String? = null, role: String? = null): HitRegionOptions {
     val o = js("({})")
 
     o["path"] = path
@@ -2476,12 +2476,12 @@ public inline fun HitRegionOptions(path: Path2D? = null, fillRule: String = "non
     fun transferFromImageBitmap(bitmap: ImageBitmap?): Unit = noImpl
 }
 
-@native public abstract class ImageBitmapRenderingContextSettings {
-    open var alpha: Boolean = true
+@native public interface ImageBitmapRenderingContextSettings {
+    var alpha: Boolean? /* = true */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ImageBitmapRenderingContextSettings(alpha: Boolean = true): ImageBitmapRenderingContextSettings {
+public inline fun ImageBitmapRenderingContextSettings(alpha: Boolean? = true): ImageBitmapRenderingContextSettings {
     val o = js("({})")
 
     o["alpha"] = alpha
@@ -2495,12 +2495,12 @@ public inline fun ImageBitmapRenderingContextSettings(alpha: Boolean = true): Im
     fun whenDefined(name: String): dynamic = noImpl
 }
 
-@native public abstract class ElementDefinitionOptions {
-    abstract var extends: String
+@native public interface ElementDefinitionOptions {
+    var extends: String?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ElementDefinitionOptions(extends: String): ElementDefinitionOptions {
+public inline fun ElementDefinitionOptions(extends: String?): ElementDefinitionOptions {
     val o = js("({})")
 
     o["extends"] = extends
@@ -2560,12 +2560,12 @@ public inline fun ElementDefinitionOptions(extends: String): ElementDefinitionOp
         get() = noImpl
 }
 
-@native public abstract class DragEventInit : MouseEventInit() {
-    open var dataTransfer: DataTransfer? = null
+@native public interface DragEventInit : MouseEventInit {
+    var dataTransfer: DataTransfer? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun DragEventInit(dataTransfer: DataTransfer? = null, screenX: Int = 0, screenY: Int = 0, clientX: Int = 0, clientY: Int = 0, button: Short = 0, buttons: Short = 0, relatedTarget: EventTarget? = null, ctrlKey: Boolean = false, shiftKey: Boolean = false, altKey: Boolean = false, metaKey: Boolean = false, modifierAltGraph: Boolean = false, modifierCapsLock: Boolean = false, modifierFn: Boolean = false, modifierFnLock: Boolean = false, modifierHyper: Boolean = false, modifierNumLock: Boolean = false, modifierScrollLock: Boolean = false, modifierSuper: Boolean = false, modifierSymbol: Boolean = false, modifierSymbolLock: Boolean = false, view: Window? = null, detail: Int = 0, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): DragEventInit {
+public inline fun DragEventInit(dataTransfer: DataTransfer? = null, screenX: Int? = 0, screenY: Int? = 0, clientX: Int? = 0, clientY: Int? = 0, button: Short? = 0, buttons: Short? = 0, relatedTarget: EventTarget? = null, ctrlKey: Boolean? = false, shiftKey: Boolean? = false, altKey: Boolean? = false, metaKey: Boolean? = false, modifierAltGraph: Boolean? = false, modifierCapsLock: Boolean? = false, modifierFn: Boolean? = false, modifierFnLock: Boolean? = false, modifierHyper: Boolean? = false, modifierNumLock: Boolean? = false, modifierScrollLock: Boolean? = false, modifierSuper: Boolean? = false, modifierSymbol: Boolean? = false, modifierSymbolLock: Boolean? = false, view: Window? = null, detail: Int? = 0, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): DragEventInit {
     val o = js("({})")
 
     o["dataTransfer"] = dataTransfer
@@ -2658,12 +2658,12 @@ public inline fun DragEventInit(dataTransfer: DataTransfer? = null, screenX: Int
         get() = noImpl
 }
 
-@native public abstract class PopStateEventInit : EventInit() {
-    open var state: Any? = null
+@native public interface PopStateEventInit : EventInit {
+    var state: Any? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun PopStateEventInit(state: Any? = null, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): PopStateEventInit {
+public inline fun PopStateEventInit(state: Any? = null, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): PopStateEventInit {
     val o = js("({})")
 
     o["state"] = state
@@ -2681,13 +2681,13 @@ public inline fun PopStateEventInit(state: Any? = null, bubbles: Boolean = false
         get() = noImpl
 }
 
-@native public abstract class HashChangeEventInit : EventInit() {
-    open var oldURL: String = ""
-    open var newURL: String = ""
+@native public interface HashChangeEventInit : EventInit {
+    var oldURL: String? /* = "" */
+    var newURL: String? /* = "" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun HashChangeEventInit(oldURL: String = "", newURL: String = "", bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): HashChangeEventInit {
+public inline fun HashChangeEventInit(oldURL: String? = "", newURL: String? = "", bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): HashChangeEventInit {
     val o = js("({})")
 
     o["oldURL"] = oldURL
@@ -2704,12 +2704,12 @@ public inline fun HashChangeEventInit(oldURL: String = "", newURL: String = "", 
         get() = noImpl
 }
 
-@native public abstract class PageTransitionEventInit : EventInit() {
-    open var persisted: Boolean = false
+@native public interface PageTransitionEventInit : EventInit {
+    var persisted: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun PageTransitionEventInit(persisted: Boolean = false, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): PageTransitionEventInit {
+public inline fun PageTransitionEventInit(persisted: Boolean? = false, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): PageTransitionEventInit {
     val o = js("({})")
 
     o["persisted"] = persisted
@@ -2785,16 +2785,16 @@ public inline fun PageTransitionEventInit(persisted: Boolean = false, bubbles: B
         get() = noImpl
 }
 
-@native public abstract class ErrorEventInit : EventInit() {
-    open var message: String = ""
-    open var filename: String = ""
-    open var lineno: Int = 0
-    open var colno: Int = 0
-    open var error: Any? = null
+@native public interface ErrorEventInit : EventInit {
+    var message: String? /* = "" */
+    var filename: String? /* = "" */
+    var lineno: Int? /* = 0 */
+    var colno: Int? /* = 0 */
+    var error: Any? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ErrorEventInit(message: String = "", filename: String = "", lineno: Int = 0, colno: Int = 0, error: Any? = null, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): ErrorEventInit {
+public inline fun ErrorEventInit(message: String? = "", filename: String? = "", lineno: Int? = 0, colno: Int? = 0, error: Any? = null, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): ErrorEventInit {
     val o = js("({})")
 
     o["message"] = message
@@ -2816,13 +2816,13 @@ public inline fun ErrorEventInit(message: String = "", filename: String = "", li
         get() = noImpl
 }
 
-@native public abstract class PromiseRejectionEventInit : EventInit() {
-    abstract var promise: dynamic
-    abstract var reason: Any?
+@native public interface PromiseRejectionEventInit : EventInit {
+    var promise: dynamic
+    var reason: Any?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun PromiseRejectionEventInit(promise: dynamic, reason: Any?, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): PromiseRejectionEventInit {
+public inline fun PromiseRejectionEventInit(promise: dynamic, reason: Any?, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): PromiseRejectionEventInit {
     val o = js("({})")
 
     o["promise"] = promise
@@ -3214,17 +3214,17 @@ public inline fun PromiseRejectionEventInit(promise: dynamic, reason: Any?, bubb
     fun close(): Unit = noImpl
 }
 
-@native public abstract class ImageBitmapOptions {
-    open var imageOrientation: String = "none"
-    open var premultiplyAlpha: String = "default"
-    open var colorSpaceConversion: String = "default"
-    abstract var resizeWidth: Int
-    abstract var resizeHeight: Int
-    open var resizeQuality: String = "low"
+@native public interface ImageBitmapOptions {
+    var imageOrientation: String? /* = "none" */
+    var premultiplyAlpha: String? /* = "default" */
+    var colorSpaceConversion: String? /* = "default" */
+    var resizeWidth: Int?
+    var resizeHeight: Int?
+    var resizeQuality: String? /* = "low" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ImageBitmapOptions(imageOrientation: String = "none", premultiplyAlpha: String = "default", colorSpaceConversion: String = "default", resizeWidth: Int, resizeHeight: Int, resizeQuality: String = "low"): ImageBitmapOptions {
+public inline fun ImageBitmapOptions(imageOrientation: String? = "none", premultiplyAlpha: String? = "default", colorSpaceConversion: String? = "default", resizeWidth: Int?, resizeHeight: Int?, resizeQuality: String? = "low"): ImageBitmapOptions {
     val o = js("({})")
 
     o["imageOrientation"] = imageOrientation
@@ -3251,16 +3251,16 @@ public inline fun ImageBitmapOptions(imageOrientation: String = "none", premulti
     fun initMessageEvent(type: String, bubbles: Boolean, cancelable: Boolean, data: Any?, origin: String, lastEventId: String, source: UnionMessagePortOrWindow?, ports: Array<MessagePort>): Unit = noImpl
 }
 
-@native public abstract class MessageEventInit : EventInit() {
-    open var data: Any? = null
-    open var origin: String = ""
-    open var lastEventId: String = ""
-    open var source: UnionMessagePortOrWindow? = null
-    open var ports: Array<MessagePort> = arrayOf()
+@native public interface MessageEventInit : EventInit {
+    var data: Any? /* = null */
+    var origin: String? /* = "" */
+    var lastEventId: String? /* = "" */
+    var source: UnionMessagePortOrWindow? /* = null */
+    var ports: Array<MessagePort>? /* = arrayOf() */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun MessageEventInit(data: Any? = null, origin: String = "", lastEventId: String = "", source: UnionMessagePortOrWindow? = null, ports: Array<MessagePort> = arrayOf(), bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): MessageEventInit {
+public inline fun MessageEventInit(data: Any? = null, origin: String? = "", lastEventId: String? = "", source: UnionMessagePortOrWindow? = null, ports: Array<MessagePort>? = arrayOf(), bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): MessageEventInit {
     val o = js("({})")
 
     o["data"] = data
@@ -3300,12 +3300,12 @@ public inline fun MessageEventInit(data: Any? = null, origin: String = "", lastE
     }
 }
 
-@native public abstract class EventSourceInit {
-    open var withCredentials: Boolean = false
+@native public interface EventSourceInit {
+    var withCredentials: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun EventSourceInit(withCredentials: Boolean = false): EventSourceInit {
+public inline fun EventSourceInit(withCredentials: Boolean? = false): EventSourceInit {
     val o = js("({})")
 
     o["withCredentials"] = withCredentials
@@ -3362,14 +3362,14 @@ public inline fun EventSourceInit(withCredentials: Boolean = false): EventSource
         get() = noImpl
 }
 
-@native public abstract class CloseEventInit : EventInit() {
-    open var wasClean: Boolean = false
-    open var code: Short = 0
-    open var reason: String = ""
+@native public interface CloseEventInit : EventInit {
+    var wasClean: Boolean? /* = false */
+    var code: Short? /* = 0 */
+    var reason: String? /* = "" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun CloseEventInit(wasClean: Boolean = false, code: Short = 0, reason: String = "", bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): CloseEventInit {
+public inline fun CloseEventInit(wasClean: Boolean? = false, code: Short? = 0, reason: String? = "", bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): CloseEventInit {
     val o = js("({})")
 
     o["wasClean"] = wasClean
@@ -3469,13 +3469,13 @@ public inline fun CloseEventInit(wasClean: Boolean = false, code: Short = 0, rea
     fun postMessage(message: Any?, transfer: Array<dynamic> = arrayOf()): Unit = noImpl
 }
 
-@native public abstract class WorkerOptions {
-    open var type: String = "classic"
-    open var credentials: String = "omit"
+@native public interface WorkerOptions {
+    var type: String? /* = "classic" */
+    var credentials: String? /* = "omit" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun WorkerOptions(type: String = "classic", credentials: String = "omit"): WorkerOptions {
+public inline fun WorkerOptions(type: String? = "classic", credentials: String? = "omit"): WorkerOptions {
     val o = js("({})")
 
     o["type"] = type
@@ -3558,16 +3558,16 @@ public inline fun WorkerOptions(type: String = "classic", credentials: String = 
         get() = noImpl
 }
 
-@native public abstract class StorageEventInit : EventInit() {
-    open var key: String? = null
-    open var oldValue: String? = null
-    open var newValue: String? = null
-    open var url: String = ""
-    open var storageArea: Storage? = null
+@native public interface StorageEventInit : EventInit {
+    var key: String? /* = null */
+    var oldValue: String? /* = null */
+    var newValue: String? /* = null */
+    var url: String? /* = "" */
+    var storageArea: Storage? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun StorageEventInit(key: String? = null, oldValue: String? = null, newValue: String? = null, url: String = "", storageArea: Storage? = null, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): StorageEventInit {
+public inline fun StorageEventInit(key: String? = null, oldValue: String? = null, newValue: String? = null, url: String? = "", storageArea: Storage? = null, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): StorageEventInit {
     val o = js("({})")
 
     o["key"] = key
@@ -3728,14 +3728,14 @@ public inline fun StorageEventInit(key: String? = null, oldValue: String? = null
     fun IsSearchProviderInstalled(): Unit = noImpl
 }
 
-@native public abstract class EventInit {
-    open var bubbles: Boolean = false
-    open var cancelable: Boolean = false
-    open var composed: Boolean = false
+@native public interface EventInit {
+    var bubbles: Boolean? /* = false */
+    var cancelable: Boolean? /* = false */
+    var composed: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun EventInit(bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): EventInit {
+public inline fun EventInit(bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): EventInit {
     val o = js("({})")
 
     o["bubbles"] = bubbles
@@ -3751,12 +3751,12 @@ public inline fun EventInit(bubbles: Boolean = false, cancelable: Boolean = fals
     fun initCustomEvent(type: String, bubbles: Boolean, cancelable: Boolean, detail: Any?): Unit = noImpl
 }
 
-@native public abstract class CustomEventInit : EventInit() {
-    open var detail: Any? = null
+@native public interface CustomEventInit : EventInit {
+    var detail: Any? /* = null */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun CustomEventInit(detail: Any? = null, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): CustomEventInit {
+public inline fun CustomEventInit(detail: Any? = null, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): CustomEventInit {
     val o = js("({})")
 
     o["detail"] = detail
@@ -3767,12 +3767,12 @@ public inline fun CustomEventInit(detail: Any? = null, bubbles: Boolean = false,
     return o
 }
 
-@native public abstract class EventListenerOptions {
-    open var capture: Boolean = false
+@native public interface EventListenerOptions {
+    var capture: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun EventListenerOptions(capture: Boolean = false): EventListenerOptions {
+public inline fun EventListenerOptions(capture: Boolean? = false): EventListenerOptions {
     val o = js("({})")
 
     o["capture"] = capture
@@ -3780,13 +3780,13 @@ public inline fun EventListenerOptions(capture: Boolean = false): EventListenerO
     return o
 }
 
-@native public abstract class AddEventListenerOptions : EventListenerOptions() {
-    open var passive: Boolean = false
-    open var once: Boolean = false
+@native public interface AddEventListenerOptions : EventListenerOptions {
+    var passive: Boolean? /* = false */
+    var once: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun AddEventListenerOptions(passive: Boolean = false, once: Boolean = false, capture: Boolean = false): AddEventListenerOptions {
+public inline fun AddEventListenerOptions(passive: Boolean? = false, once: Boolean? = false, capture: Boolean? = false): AddEventListenerOptions {
     val o = js("({})")
 
     o["passive"] = passive
@@ -3864,18 +3864,18 @@ public inline fun AddEventListenerOptions(passive: Boolean = false, once: Boolea
     fun takeRecords(): Array<MutationRecord> = noImpl
 }
 
-@native public abstract class MutationObserverInit {
-    open var childList: Boolean = false
-    abstract var attributes: Boolean
-    abstract var characterData: Boolean
-    open var subtree: Boolean = false
-    abstract var attributeOldValue: Boolean
-    abstract var characterDataOldValue: Boolean
-    abstract var attributeFilter: Array<String>
+@native public interface MutationObserverInit {
+    var childList: Boolean? /* = false */
+    var attributes: Boolean?
+    var characterData: Boolean?
+    var subtree: Boolean? /* = false */
+    var attributeOldValue: Boolean?
+    var characterDataOldValue: Boolean?
+    var attributeFilter: Array<String>?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun MutationObserverInit(childList: Boolean = false, attributes: Boolean, characterData: Boolean, subtree: Boolean = false, attributeOldValue: Boolean, characterDataOldValue: Boolean, attributeFilter: Array<String>): MutationObserverInit {
+public inline fun MutationObserverInit(childList: Boolean? = false, attributes: Boolean?, characterData: Boolean?, subtree: Boolean? = false, attributeOldValue: Boolean?, characterDataOldValue: Boolean?, attributeFilter: Array<String>?): MutationObserverInit {
     val o = js("({})")
 
     o["childList"] = childList
@@ -3979,12 +3979,12 @@ public inline fun MutationObserverInit(childList: Boolean = false, attributes: B
     }
 }
 
-@native public abstract class GetRootNodeOptions {
-    open var composed: Boolean = false
+@native public interface GetRootNodeOptions {
+    var composed: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun GetRootNodeOptions(composed: Boolean = false): GetRootNodeOptions {
+public inline fun GetRootNodeOptions(composed: Boolean? = false): GetRootNodeOptions {
     val o = js("({})")
 
     o["composed"] = composed
@@ -3995,12 +3995,12 @@ public inline fun GetRootNodeOptions(composed: Boolean = false): GetRootNodeOpti
 @native public open class XMLDocument : Document() {
 }
 
-@native public abstract class ElementCreationOptions {
-    @native("is") abstract var is_: String
+@native public interface ElementCreationOptions {
+    @native("is") var is_: String?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ElementCreationOptions(is_: String): ElementCreationOptions {
+public inline fun ElementCreationOptions(is_: String?): ElementCreationOptions {
     val o = js("({})")
 
     o["is"] = is_
@@ -4120,12 +4120,12 @@ public inline fun ElementCreationOptions(is_: String): ElementCreationOptions {
     fun scrollBy(x: Double, y: Double): Unit = noImpl
 }
 
-@native public abstract class ShadowRootInit {
-    abstract var mode: String
+@native public interface ShadowRootInit {
+    var mode: String?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ShadowRootInit(mode: String): ShadowRootInit {
+public inline fun ShadowRootInit(mode: String?): ShadowRootInit {
     val o = js("({})")
 
     o["mode"] = mode
@@ -4346,15 +4346,15 @@ public inline fun ShadowRootInit(mode: String): ShadowRootInit {
         set(value) = noImpl
 }
 
-@native public abstract class DOMPointInit {
-    open var x: Double = 0.0
-    open var y: Double = 0.0
-    open var z: Double = 0.0
-    open var w: Double = 1.0
+@native public interface DOMPointInit {
+    var x: Double? /* = 0.0 */
+    var y: Double? /* = 0.0 */
+    var z: Double? /* = 0.0 */
+    var w: Double? /* = 1.0 */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun DOMPointInit(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0, w: Double = 1.0): DOMPointInit {
+public inline fun DOMPointInit(x: Double? = 0.0, y: Double? = 0.0, z: Double? = 0.0, w: Double? = 1.0): DOMPointInit {
     val o = js("({})")
 
     o["x"] = x
@@ -4399,15 +4399,15 @@ public inline fun DOMPointInit(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0
         get() = noImpl
 }
 
-@native public abstract class DOMRectInit {
-    open var x: Double = 0.0
-    open var y: Double = 0.0
-    open var width: Double = 0.0
-    open var height: Double = 0.0
+@native public interface DOMRectInit {
+    var x: Double? /* = 0.0 */
+    var y: Double? /* = 0.0 */
+    var width: Double? /* = 0.0 */
+    var height: Double? /* = 0.0 */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun DOMRectInit(x: Double = 0.0, y: Double = 0.0, width: Double = 0.0, height: Double = 0.0): DOMRectInit {
+public inline fun DOMRectInit(x: Double? = 0.0, y: Double? = 0.0, width: Double? = 0.0, height: Double? = 0.0): DOMRectInit {
     val o = js("({})")
 
     o["x"] = x
@@ -4595,12 +4595,12 @@ public inline fun DOMRectInit(x: Double = 0.0, y: Double = 0.0, width: Double = 
     fun setMatrixValue(transformList: String): DOMMatrix = noImpl
 }
 
-@native public abstract class ScrollOptions {
-    open var behavior: String = "auto"
+@native public interface ScrollOptions {
+    var behavior: String? /* = "auto" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ScrollOptions(behavior: String = "auto"): ScrollOptions {
+public inline fun ScrollOptions(behavior: String? = "auto"): ScrollOptions {
     val o = js("({})")
 
     o["behavior"] = behavior
@@ -4608,13 +4608,13 @@ public inline fun ScrollOptions(behavior: String = "auto"): ScrollOptions {
     return o
 }
 
-@native public abstract class ScrollToOptions : ScrollOptions() {
-    abstract var left: Double
-    abstract var top: Double
+@native public interface ScrollToOptions : ScrollOptions {
+    var left: Double?
+    var top: Double?
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ScrollToOptions(left: Double, top: Double, behavior: String = "auto"): ScrollToOptions {
+public inline fun ScrollToOptions(left: Double?, top: Double?, behavior: String? = "auto"): ScrollToOptions {
     val o = js("({})")
 
     o["left"] = left
@@ -4645,13 +4645,13 @@ public inline fun ScrollToOptions(left: Double, top: Double, behavior: String = 
         get() = noImpl
 }
 
-@native public abstract class MediaQueryListEventInit : EventInit() {
-    open var media: String = ""
-    open var matches: Boolean = false
+@native public interface MediaQueryListEventInit : EventInit {
+    var media: String? /* = "" */
+    var matches: Boolean? /* = false */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun MediaQueryListEventInit(media: String = "", matches: Boolean = false, bubbles: Boolean = false, cancelable: Boolean = false, composed: Boolean = false): MediaQueryListEventInit {
+public inline fun MediaQueryListEventInit(media: String? = "", matches: Boolean? = false, bubbles: Boolean? = false, cancelable: Boolean? = false, composed: Boolean? = false): MediaQueryListEventInit {
     val o = js("({})")
 
     o["media"] = media
@@ -4686,13 +4686,13 @@ public inline fun MediaQueryListEventInit(media: String = "", matches: Boolean =
     fun getClientRect(): DOMRect? = noImpl
 }
 
-@native public abstract class ScrollIntoViewOptions : ScrollOptions() {
-    open var block: String = "center"
-    open var inline: String = "center"
+@native public interface ScrollIntoViewOptions : ScrollOptions {
+    var block: String? /* = "center" */
+    var inline: String? /* = "center" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ScrollIntoViewOptions(block: String = "center", inline: String = "center", behavior: String = "auto"): ScrollIntoViewOptions {
+public inline fun ScrollIntoViewOptions(block: String? = "center", inline: String? = "center", behavior: String? = "auto"): ScrollIntoViewOptions {
     val o = js("({})")
 
     o["block"] = block
@@ -4702,13 +4702,13 @@ public inline fun ScrollIntoViewOptions(block: String = "center", inline: String
     return o
 }
 
-@native public abstract class BoxQuadOptions {
-    open var box: String = "border"
-    abstract var relativeTo: dynamic
+@native public interface BoxQuadOptions {
+    var box: String? /* = "border" */
+    var relativeTo: dynamic
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun BoxQuadOptions(box: String = "border", relativeTo: dynamic): BoxQuadOptions {
+public inline fun BoxQuadOptions(box: String? = "border", relativeTo: dynamic): BoxQuadOptions {
     val o = js("({})")
 
     o["box"] = box
@@ -4717,13 +4717,13 @@ public inline fun BoxQuadOptions(box: String = "border", relativeTo: dynamic): B
     return o
 }
 
-@native public abstract class ConvertCoordinateOptions {
-    open var fromBox: String = "border"
-    open var toBox: String = "border"
+@native public interface ConvertCoordinateOptions {
+    var fromBox: String? /* = "border" */
+    var toBox: String? /* = "border" */
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun ConvertCoordinateOptions(fromBox: String = "border", toBox: String = "border"): ConvertCoordinateOptions {
+public inline fun ConvertCoordinateOptions(fromBox: String? = "border", toBox: String? = "border"): ConvertCoordinateOptions {
     val o = js("({})")
 
     o["fromBox"] = fromBox
