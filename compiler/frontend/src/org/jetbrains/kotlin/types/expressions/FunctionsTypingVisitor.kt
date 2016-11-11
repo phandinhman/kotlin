@@ -174,9 +174,6 @@ internal class FunctionsTypingVisitor(facade: ExpressionTypingInternals) : Expre
         components.functionDescriptorResolver.
                 initializeFunctionDescriptorAndExplicitReturnType(context.scope.ownerDescriptor, context.scope, functionLiteral,
                                                                   functionDescriptor, context.trace, context.expectedType)
-        for (parameterDescriptor in functionDescriptor.valueParameters) {
-            ForceResolveUtil.forceResolveAllContents(parameterDescriptor.annotations)
-        }
         BindingContextUtils.recordFunctionDeclarationToDescriptor(context.trace, functionLiteral, functionDescriptor)
         return functionDescriptor
     }
