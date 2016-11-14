@@ -141,8 +141,6 @@ public class BodyResolver {
             @NotNull final ClassConstructorDescriptor descriptor,
             @NotNull LexicalScope declaringScope
     ) {
-        ForceResolveUtil.forceResolveAllContents(descriptor.getAnnotations());
-
         resolveFunctionBody(outerDataFlowInfo, trace, constructor, descriptor, declaringScope,
                             new Function1<LexicalScope, DataFlowInfo>() {
                                 @Override
