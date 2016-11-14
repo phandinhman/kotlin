@@ -634,8 +634,6 @@ public class DescriptorResolver {
                 KotlinSourceElementKt.toSourceElement(parameter)
         );
         trace.record(BindingContext.VALUE_PARAMETER, parameter, variableDescriptor);
-        // Type annotations also should be resolved
-        ForceResolveUtil.forceResolveAllContents(type.getAnnotations());
         return variableDescriptor;
     }
 
