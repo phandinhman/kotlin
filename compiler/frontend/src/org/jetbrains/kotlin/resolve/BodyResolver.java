@@ -573,8 +573,6 @@ public class BodyResolver {
             ClassDescriptorWithResolutionScopes classDescriptor = entry.getValue();
             ConstructorDescriptor unsubstitutedPrimaryConstructor = classDescriptor.getUnsubstitutedPrimaryConstructor();
             if (unsubstitutedPrimaryConstructor != null) {
-                ForceResolveUtil.forceResolveAllContents(unsubstitutedPrimaryConstructor.getAnnotations());
-
                 LexicalScope parameterScope = getPrimaryConstructorParametersScope(classDescriptor.getScopeForConstructorHeaderResolution(),
                                                                                    unsubstitutedPrimaryConstructor);
                 valueParameterResolver.resolveValueParameters(klass.getPrimaryConstructorParameters(),
