@@ -10,6 +10,7 @@ inline var z: Int
 
 // MODULE: main(lib)
 // FILE: main.kt
+// PROPERTY_NOT_USED: z
 
 import test.*
 
@@ -18,10 +19,9 @@ fun box(): String {
     if (value != 1) return "fail 1: $value"
 
     z = v + 2
-
     if (value != 3) return "fail 2: $value"
-    var p = z
 
+    var p = z
     if (value != 4)  return "fail 3: $value"
 
     return "OK"
