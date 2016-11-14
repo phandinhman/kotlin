@@ -75,7 +75,7 @@ class IDELightClassGenerationSupport(private val project: Project) : LightClassG
         }
         finally {
             val countAtEnd = ForceResolveUtil.RESOLVED_LAZY_ENTITIES.get()
-            LOG.info("Preparing light class for ${classOrObject.fqName} resolved ${countAtEnd - countAtStart} lazy entities")
+            LOG.warn("Preparing light class for ${classOrObject.fqName} resolved ${countAtEnd - countAtStart} lazy entities")
         }
     }
 
