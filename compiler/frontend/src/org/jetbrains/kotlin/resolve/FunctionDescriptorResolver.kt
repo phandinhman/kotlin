@@ -185,10 +185,6 @@ class FunctionDescriptorResolver(
         functionDescriptor.isInline = function.hasModifier(KtTokens.INLINE_KEYWORD)
         functionDescriptor.isTailrec = function.hasModifier(KtTokens.TAILREC_KEYWORD)
         functionDescriptor.isSuspend = function.hasModifier(KtTokens.SUSPEND_KEYWORD)
-        receiverType?.let { ForceResolveUtil.forceResolveAllContents(it.annotations) }
-        for (valueParameterDescriptor in valueParameterDescriptors) {
-            ForceResolveUtil.forceResolveAllContents(valueParameterDescriptor.type.annotations)
-        }
     }
 
     private fun createValueParameterDescriptors(
