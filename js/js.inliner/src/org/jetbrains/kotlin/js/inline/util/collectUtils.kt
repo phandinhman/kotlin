@@ -183,16 +183,11 @@ fun collectAccessors(scope: JsNode): Map<String, JsFunction> {
     val accessors = hashMapOf<String, JsFunction>()
 
     scope.accept(object : RecursiveJsVisitor() {
-        override fun visitPropertyInitializer(x: JsPropertyInitializer) {
-            super.visitPropertyInitializer(x)
-
-            if (x.labelExpr is JsNameRef) {
-                (x.valueExpr as? JsObjectLiteral)?.propertyInitializers?.forEach {
-                    InlineMetadata.decompose(it.valueExpr)?.let {
-                        accessors[it.tag.value] = it.function
-                    }
-                }
+        override fun visitInvocation(invocation: JsInvocation) {
+            InlineMetadata.decompose(invocation)?.let {
+                accessors[it.tag.value] = it.function
             }
+            super.visitInvocation(invocation)
         }
     })
 

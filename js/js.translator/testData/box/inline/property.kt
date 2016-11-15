@@ -1,63 +1,157 @@
 // PROPERTY_NOT_USED: p1
 // PROPERTY_NOT_READ_FROM: p2
 // PROPERTY_NOT_WRITTEN_TO: p3
-// CHECK_NOT_CALLED: get_p4_s8ev3o$
-// CHECK_NOT_CALLED: set_p4_rksjo2$
-// CHECK_NOT_CALLED: get_p5_s8ev3o$
-// CHECK_NOT_CALLED: set_p6_rksjo2$
+// CHECK_NOT_CALLED: get_p4
+// CHECK_NOT_CALLED: set_p4
+// CHECK_NOT_CALLED: get_p5
+// CHECK_NOT_CALLED: set_p6
+// PROPERTY_NOT_USED: p7
+// PROPERTY_NOT_READ_FROM: p8
+// PROPERTY_NOT_WRITTEN_TO: p9
+// CHECK_NOT_CALLED: get_p10_s8ev3o$
+// CHECK_NOT_CALLED: set_p10_rksjo2$
+// CHECK_NOT_CALLED: get_p11_s8ev3o$
+// CHECK_NOT_CALLED: set_p12_rksjo2$
+// CHECK_NOT_CALLED: get_p13
+// CHECK_NOT_CALLED: set_p13
+// CHECK_NOT_CALLED: get_p14
+// CHECK_NOT_CALLED: set_p15
 
 var a = 0
 
 inline var p1: Int
-    get() = a
+    get() = a + 10000
     set(v: Int) {
-        a = v
+        a = v + 100
     }
 
 var p2: Int
-    inline get() = a * 10
+    inline get() = a + 20000
     set(v: Int) {
-        a = v / 10
+        a = v + 200
     }
 
 var p3: Int
-    get() = a * 20
+    get() = a + 30000
     inline set(v: Int) {
-        a = v / 20
+        a = v + 300
     }
 
 inline var Int.p4: Int
-    get() = this * a
+    get() = this * 100 + a + 40000
     set(v: Int) {
-        a = this * v / 30
+        a = this + v + 400
     }
 
 var Int.p5: Int
-    inline get() = this * a
+    inline get() = this * 100 + a + 50000
     set(v: Int) {
-        a = this * v / 40
+        a = this + v + 500
     }
 
 var Int.p6: Int
-    get() = this * a
+    get() = this * 100 + a + 60000
     inline set(v: Int) {
-        a = this * v / 50
+        a = this + v + 600
     }
+
+class A {
+    inline var p7: Int
+        get() = a + 70000
+        set(v: Int) {
+            a = v + 700
+        }
+
+    var p8: Int
+        inline get() = a + 80000
+        set(v: Int) {
+            a = v + 800
+        }
+
+    var p9: Int
+        get() = a + 90000
+        inline set(v: Int) {
+            a = v + 900
+        }
+
+    inline var Int.p10: Int
+        get() = this * 100 + a + 100000
+        set(v: Int) {
+            a = this + v + 1000
+        }
+
+    var Int.p11: Int
+        inline get() = this * 100 + a + 110000
+        set(v: Int) {
+            a = this + v + 1100
+        }
+
+    var Int.p12: Int
+        get() = this * 100 + a + 120000
+        inline set(v: Int) {
+            a = this + v + 1200
+        }
+}
+
+inline var A.p13: Int
+    get() = a + 130000
+    set(v: Int) {
+        a = v + 1300
+    }
+
+var A.p14: Int
+    inline get() = a + 140000
+    set(v: Int) {
+        a = v + 1400
+    }
+
+var A.p15: Int
+    get() = a + 150000
+    inline set(v: Int) {
+        a = v + 1500
+    }
+
 
 fun box(): String {
     p1 = 1
-    if (p1 != 1) return "test1: ${p1}"
-    p2 = 15
-    if (p2 != 10) return "test2: ${p2}"
-    p3 = 25
-    if (p3 != 20) return "test3: ${p3}"
+    if (p1 != 10101) return "test1: $p1"
+    p2 = 2
+    if (p2 != 20202) return "test2: $p2"
+    p3 = 3
+    if (p3 != 30303) return "test3: $p3"
 
-    35.p4 = 10
-    if (4.p4 != 44) return "test4: ${4.p4}"
-    45.p5 = 10
-    if (5.p5 != 55) return "test5: ${5.p5}"
-    55.p6 = 10
-    if (6.p6 != 66) return "test6: ${6.p6}"
+    4000000.p4 = 4
+    if (4000000.p4 != 404040404) return "test4: ${4000000.p4}"
+    5000000.p5 = 5
+    if (5000000.p5 != 505050505) return "test5: ${5000000.p5}"
+    6000000.p6 = 6
+    if (6000000.p6 != 606060606) return "test6: ${6000000.p6}"
+
+
+    val a = A()
+
+    a.p7 = 7
+    if (a.p7 != 70707) return "test7: ${a.p7}"
+    a.p8 = 8
+    if (a.p8 != 80808) return "test8: ${a.p8}"
+    a.p9 = 9
+    if (a.p9 != 90909) return "test9: ${a.p9}"
+
+    with (a) {
+        10000000.p10 = 10
+        if (10000000.p10 != 1010101010) return "test10: ${10000000.p10}"
+        11000000.p11 = 11
+        if (11000000.p11 != 1111111111) return "test11: ${11000000.p11}"
+        12000000.p12 = 12
+        if (12000000.p12 != 1212121212) return "test12: ${12000000.p12}"
+    }
+
+    a.p13 = 13
+    if (a.p13 != 131313) return "test13: ${a.p13}"
+    a.p14 = 14
+    if (a.p14 != 141414) return "test14: ${a.p14}"
+    a.p15 = 15
+    if (a.p15 != 151515) return "test15: ${a.p15}"
 
     return "OK"
 }
