@@ -17,31 +17,29 @@
 package org.jetbrains.kotlin.js.test.utils
 
 import com.google.dart.compiler.backend.js.ast.*
-import com.google.dart.compiler.util.AstUtil
 import org.jetbrains.kotlin.js.translate.utils.JsAstUtils
-import java.util.*
 
-class NameCollector : RecursiveJsVisitor() {
+class IdentCollector : RecursiveJsVisitor() {
 
-    private val nameReadSet = hashSetOf<String>()
-    private val nameWriteSet = hashSetOf<String>()
+    private val identReadSet = hashSetOf<String>()
+    private val identWriteSet = hashSetOf<String>()
 
-    fun hasUnqualifiedReads(expectedName: String) = expectedName in nameReadSet
-    fun hasUnqualifiedWrites(expectedName: String) = expectedName in nameWriteSet
+    fun hasUnqualifiedReads(expectedIdent: String) = expectedIdent in identReadSet
+    fun hasUnqualifiedWrites(expectedIdent: String) = expectedIdent in identWriteSet
 
     override fun visitNameRef(nameRef: JsNameRef) {
         super.visitNameRef(nameRef)
-        nameReadSet.add(nameRef.ident)
+        identReadSet.add(nameRef.ident)
     }
 
     override fun visitBinaryExpression(x: JsBinaryOperation) {
         var assignmentToProperty = false
-        JsAstUtils.decomposeAssignment(x)?.let { (name, e) ->
-            (name as? JsNameRef)?.let {
+        JsAstUtils.decomposeAssignment(x)?.let { (left, right) ->
+            (left as? JsNameRef)?.let { nameRef ->
                 assignmentToProperty = true
-                nameWriteSet.add(it.ident)
-                it.qualifier?.accept(this)
-                e.accept(this)
+                identWriteSet.add(nameRef.ident)
+                nameRef.qualifier?.accept(this)
+                right.accept(this)
             }
         }
         if (!assignmentToProperty) {
@@ -54,11 +52,9 @@ class NameCollector : RecursiveJsVisitor() {
         this.accept(x.valueExpr)
     }
 
-
-
     companion object {
-        fun collectNames(node: JsNode): NameCollector {
-            val visitor = NameCollector()
+        fun collect(node: JsNode): IdentCollector {
+            val visitor = IdentCollector()
             node.accept(visitor)
             return visitor
         }
