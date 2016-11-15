@@ -47,11 +47,6 @@ class IdentCollector : RecursiveJsVisitor() {
         }
     }
 
-    override fun visitPropertyInitializer(x: JsPropertyInitializer) {
-        // Skip property initializer names
-        this.accept(x.valueExpr)
-    }
-
     companion object {
         fun collect(node: JsNode): IdentCollector {
             val visitor = IdentCollector()
