@@ -42,7 +42,6 @@ import org.jetbrains.kotlin.idea.debugger.breakpoints.getLambdasAtLineIfAny
 import org.jetbrains.kotlin.idea.debugger.evaluate.KotlinCodeFragmentFactory
 import org.jetbrains.kotlin.idea.debugger.evaluate.KotlinDebuggerCaches
 import org.jetbrains.kotlin.idea.decompiler.classFile.KtClsFile
-import org.jetbrains.kotlin.idea.refactoring.getLineCount
 import org.jetbrains.kotlin.idea.refactoring.getLineStartOffset
 import org.jetbrains.kotlin.idea.stubindex.KotlinSourceFilterScope
 import org.jetbrains.kotlin.idea.util.ProjectRootsUtil
@@ -121,20 +120,8 @@ class KotlinPositionManager(private val myDebugProcess: DebugProcess) : MultiReq
             return SourcePosition.createFromElement(elementInDeclaration)
         }
 
-        if (sourceLineNumber > psiFile.getLineCount() && myDebugProcess.isDexDebug()) {
-            val thisFunLine = getLastLineNumberForLocation(location, myDebugProcess.project)
-            if (thisFunLine != null && thisFunLine != location.lineNumber()) {
-                return SourcePosition.createFromLine(psiFile, thisFunLine - 1)
-            }
-
-            val inlinePosition = getOriginalPositionOfInlinedLine(location, myDebugProcess.project)
-
-            if (inlinePosition != null) {
-                return SourcePosition.createFromLine(inlinePosition.first, inlinePosition.second)
-            }
-        }
-
-        return SourcePosition.createFromLine(psiFile, sourceLineNumber)
+        val (line, ktFile) = ktLocationInfo(location, myDebugProcess.isDexDebug(), myDebugProcess.project, false, psiFile)
+        return SourcePosition.createFromLine(ktFile ?: psiFile, line - 1)
     }
 
     // Returns a property or a constructor if debugger stops at class declaration
