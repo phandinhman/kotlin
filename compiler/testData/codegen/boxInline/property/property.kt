@@ -17,6 +17,9 @@
 // CHECK_NOT_CALLED: get_p14
 // CHECK_NOT_CALLED: set_p15
 
+// FILE: 1.kt
+package test
+
 var a = 0
 
 inline var p1: Int
@@ -111,6 +114,8 @@ var A.p15: Int
         a = v + 1500
     }
 
+// FILE: 2.kt
+import test.*
 
 fun box(): String {
     p1 = 1

@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.js.test.utils
 import com.google.dart.compiler.backend.js.ast.*
 import org.jetbrains.kotlin.js.translate.utils.JsAstUtils
 
-class IdentCollector : RecursiveJsVisitor() {
+class PropertyReferenceCollector : RecursiveJsVisitor() {
 
     private val identReadSet = hashSetOf<String>()
     private val identWriteSet = hashSetOf<String>()
@@ -48,8 +48,8 @@ class IdentCollector : RecursiveJsVisitor() {
     }
 
     companion object {
-        fun collect(node: JsNode): IdentCollector {
-            val visitor = IdentCollector()
+        fun collect(node: JsNode): PropertyReferenceCollector {
+            val visitor = PropertyReferenceCollector()
             node.accept(visitor)
             return visitor
         }

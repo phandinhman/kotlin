@@ -36,6 +36,12 @@ public class PropertyAccessorsInlineTestsGenerated extends AbstractPropertyAcces
         KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/property"), Pattern.compile("^(.+)\\.kt$"), TargetBackend.JS, true);
     }
 
+    @TestMetadata("property.kt")
+    public void testProperty() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/property/property.kt");
+        doTest(fileName);
+    }
+
     @TestMetadata("reifiedVal.kt")
     public void testReifiedVal() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/property/reifiedVal.kt");

@@ -286,7 +286,7 @@ public class DirectiveTestUtils {
     }
 
     public static void checkPropertyNotUsed(JsNode node, String propertyName, boolean isGetAllowed, boolean isSetAllowed) throws Exception {
-        IdentCollector counter = IdentCollector.Companion.collect(node);
+        PropertyReferenceCollector counter = PropertyReferenceCollector.Companion.collect(node);
         if (!isGetAllowed) {
             assertFalse("inline property getter for `" + propertyName + "` is called", counter.hasUnqualifiedReads(propertyName));
         }
