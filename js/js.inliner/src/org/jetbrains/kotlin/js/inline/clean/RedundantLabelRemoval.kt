@@ -103,7 +103,10 @@ internal class RedundantLabelRemoval(private val root: JsStatement) {
             val elseStatement = statement.elseStatement
             val elseRemoved = elseStatement?.let { perform(it, name) == null } ?: false
             when {
-                thenRemoved && (elseRemoved || elseStatement == null) -> JsAstUtils.asSyntheticStatement(statement.ifExpression)
+                thenRemoved && (elseRemoved || elseStatement == null) -> {
+                    hasChanges = true
+                    JsAstUtils.asSyntheticStatement(statement.ifExpression)
+                }
                 elseRemoved -> {
                     hasChanges = true
                     statement.elseStatement = null

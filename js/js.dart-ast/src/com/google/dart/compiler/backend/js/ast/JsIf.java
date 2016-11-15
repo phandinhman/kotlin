@@ -28,8 +28,7 @@ public final class JsIf extends SourceInfoAwareJsNode implements JsStatement {
     }
 
     public JsIf(@NotNull JsExpression ifExpression, @NotNull JsStatement thenStatement) {
-        this.ifExpression = ifExpression;
-        this.thenStatement = thenStatement;
+        this(ifExpression, thenStatement, null);
     }
 
     @Nullable
