@@ -75,21 +75,6 @@ public class ForceResolveUtil {
             RESOLVED_LAZY_ENTITIES.incrementAndGet();
             lazyEntity.forceResolveAllContents();
         }
-        else if (object instanceof CallableDescriptor) {
-            CallableDescriptor callableDescriptor = (CallableDescriptor) object;
-            ReceiverParameterDescriptor parameter = callableDescriptor.getExtensionReceiverParameter();
-            if (parameter != null) {
-                forceResolveAllContents(parameter.getType());
-            }
-            for (ValueParameterDescriptor parameterDescriptor : callableDescriptor.getValueParameters()) {
-                forceResolveAllContents(parameterDescriptor);
-            }
-            for (TypeParameterDescriptor typeParameterDescriptor : callableDescriptor.getTypeParameters()) {
-                forceResolveAllContents(typeParameterDescriptor.getUpperBounds());
-            }
-            forceResolveAllContents(callableDescriptor.getReturnType());
-            forceResolveAllContents(callableDescriptor.getAnnotations());
-        }
         else if (object instanceof TypeAliasDescriptor) {
             TypeAliasDescriptor typeAliasDescriptor = (TypeAliasDescriptor) object;
             forceResolveAllContents(typeAliasDescriptor.getUnderlyingType());
