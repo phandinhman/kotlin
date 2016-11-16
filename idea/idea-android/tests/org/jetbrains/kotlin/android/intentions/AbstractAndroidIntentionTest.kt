@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.android.intentions
 import com.android.SdkConstants
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.PathUtil
+import junit.framework.TestCase
 import org.jetbrains.android.inspections.klint.AndroidLintInspectionBase
 import org.jetbrains.kotlin.android.KotlinAndroidTestCase
 import org.jetbrains.kotlin.idea.test.DirectiveBasedActionUtils
@@ -43,6 +44,10 @@ abstract class AbstractAndroidIntentionTest : KotlinAndroidTestCase() {
         myFixture.configureFromExistingVirtualFile(sourceFile)
 
         DirectiveBasedActionUtils.checkForUnexpectedErrors(myFixture.file as KtFile)
+        val inspectionHighlightInfo = myFixture.doHighlighting().first {
+            it.description == "Do not hardcode \"/sdcard/\"; use `Environment.getExternalStorageDirectory().getPath()` instead" }
+
+        TestCase.assertNotNull(inspectionHighlightInfo)
 
         val intention = myFixture.getAvailableIntention(intentionText) ?: error("Failed to find intention")
         myFixture.launchAction(intention)
