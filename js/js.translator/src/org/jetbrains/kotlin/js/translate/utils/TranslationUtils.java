@@ -267,7 +267,12 @@ public final class TranslationUtils {
             return false;
         }
         DeclarationDescriptor descriptor = context.bindingContext().get(BindingContext.REFERENCE_TARGET, ((KtSimpleNameExpression) expression));
-        return !(descriptor instanceof LocalVariableDescriptor) || !((LocalVariableDescriptor) descriptor).isDelegated();
+        return !((descriptor instanceof LocalVariableDescriptor) && ((LocalVariableDescriptor) descriptor).isDelegated()) &&
+                !((descriptor instanceof PropertyDescriptor) && propertyAccessedByFuntionsInternally((PropertyDescriptor) descriptor, context));
+    }
+
+    private static boolean propertyAccessedByFuntionsInternally(@NotNull PropertyDescriptor p, @NotNull TranslationContext context) {
+        return !JsDescriptorUtils.isSimpleFinalProperty(p) && context.isFromCurrentModule(p) || shouldAccessViaFunctions(p);
     }
 
     public static boolean shouldAccessViaFunctions(@NotNull CallableDescriptor descriptor) {
