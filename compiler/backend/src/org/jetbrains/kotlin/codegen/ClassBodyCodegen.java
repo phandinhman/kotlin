@@ -23,8 +23,7 @@ import org.jetbrains.kotlin.codegen.context.ClassContext;
 import org.jetbrains.kotlin.codegen.state.GenerationState;
 import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.fir.FirClassOrObject;
-import org.jetbrains.kotlin.fir.FirUtil;
-import org.jetbrains.kotlin.fir.SyntheticClassOrObject;
+import org.jetbrains.kotlin.fir.SyntheticClassOrObjectDescriptor;
 import org.jetbrains.kotlin.fir.SyntheticClassOrObjectKt;
 import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.kotlin.resolve.BindingContext;
@@ -90,9 +89,8 @@ public abstract class ClassBodyCodegen extends MemberCodegen<FirClassOrObject> {
 
         // Generate synthetic (non-declared) companion if needed
         ClassDescriptor companionObjectDescriptor = descriptor.getCompanionObjectDescriptor();
-        SyntheticClassOrObject syntheticCompanionObject = FirUtil.getSyntheticClassOrObject(companionObjectDescriptor);
-        if (syntheticCompanionObject != null) {
-            genSyntheticClassOrObject(syntheticCompanionObject, companionObjectDescriptor);
+        if (companionObjectDescriptor instanceof SyntheticClassOrObjectDescriptor) {
+            genSyntheticClassOrObject((SyntheticClassOrObjectDescriptor) companionObjectDescriptor);
         }
 
         if (!DescriptorUtils.isInterface(descriptor)) {

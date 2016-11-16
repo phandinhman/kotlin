@@ -37,7 +37,7 @@ import org.jetbrains.kotlin.fileClasses.FileClasses;
 import org.jetbrains.kotlin.fileClasses.JvmFileClassesProvider;
 import org.jetbrains.kotlin.fir.FirClassOrObject;
 import org.jetbrains.kotlin.fir.FirElement;
-import org.jetbrains.kotlin.fir.SyntheticClassOrObject;
+import org.jetbrains.kotlin.fir.SyntheticClassOrObjectDescriptor;
 import org.jetbrains.kotlin.load.java.JavaVisibilities;
 import org.jetbrains.kotlin.load.java.JvmAbi;
 import org.jetbrains.kotlin.load.kotlin.header.KotlinClassHeader;
@@ -295,8 +295,8 @@ public abstract class MemberCodegen<T extends FirElement/* TODO: & KtDeclaration
         genClassOrObject(context, aClass, state, this);
     }
 
-    public void genSyntheticClassOrObject(SyntheticClassOrObject aClass, ClassDescriptor descriptor) {
-        genClassOrObject(context, aClass, state, this, descriptor);
+    public void genSyntheticClassOrObject(SyntheticClassOrObjectDescriptor descriptor) {
+        genClassOrObject(context, descriptor.getSyntheticDeclaration(), state, this, descriptor);
     }
 
     private void writeInnerClasses() {

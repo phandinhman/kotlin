@@ -16,7 +16,6 @@
 
 package org.jetbrains.kotlin.resolve
 
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.descriptors.impl.ClassConstructorDescriptorImpl
@@ -39,8 +38,7 @@ object KSerializerDescriptorResolver {
     @JvmStatic
     fun containsKSerializer(result: Collection<KotlinType>): Boolean = result.any(::isKSerializer)
 
-    @JvmStatic
-    fun addSerializerSuperType(classDescriptor: ClassDescriptor, supertypes: MutableList<KotlinType>, builtIns: KotlinBuiltIns) {
+    fun addSerializerSupertypes(classDescriptor: ClassDescriptor, supertypes: MutableList<KotlinType>) {
         val serializableClassDescriptor = getSerializableClassDescriptor(classDescriptor)
         if (serializableClassDescriptor != null && !KSerializerDescriptorResolver.containsKSerializer(supertypes)) {
             supertypes.add(classDescriptor.getKSerializerType(serializableClassDescriptor.defaultType))

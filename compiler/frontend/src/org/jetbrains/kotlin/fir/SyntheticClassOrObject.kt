@@ -23,19 +23,14 @@ import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.BindingContextUtils
 
 /**
- * Synthetic Class or Object in Frontend Intermediate Representation (FIR).
- * It is used to create synthetic companion objects.
+ * Synthetic Class or Object.
+ * This class is in 1-to-1 correspondence with SyntheticClassOrObjectDescriptor.
  */
 class SyntheticClassOrObject(
         private val _parent: FirElement,
-        private val _name: String
+        private val _name: String,
+        val descriptor: SyntheticClassOrObjectDescriptor
 ) : FirClassOrObject {
-    lateinit var descriptor: ClassDescriptor private set
-
-    fun initDescriptor(descriptor: ClassDescriptor) {
-        this.descriptor = descriptor
-    }
-
     override fun getName(): String? = _name
     override fun isLocal(): Boolean = false
 

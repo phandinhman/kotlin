@@ -26,6 +26,8 @@ import org.jetbrains.kotlin.diagnostics.DiagnosticSink
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.diagnostics.reportOnDeclarationAs
 import org.jetbrains.kotlin.diagnostics.reportOnDeclarationOrFail
+import org.jetbrains.kotlin.fir.extensionGenerateSyntheticMethods
+import org.jetbrains.kotlin.fir.extensionNeedsSyntheticCompanionObject
 import org.jetbrains.kotlin.incremental.components.LookupLocation
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.incremental.record
@@ -145,7 +147,7 @@ open class LazyClassMemberScope(
         }
         result.addAll(generateDelegatingDescriptors(name, EXTRACT_FUNCTIONS, result))
         generateDataClassMethods(result, name, location, fromSupertypes)
-        generateSyntheticMethods(result, name, fromSupertypes)
+        thisDescriptor.extensionGenerateSyntheticMethods(name, fromSupertypes, result)
         generateFakeOverrides(name, fromSupertypes, result, SimpleFunctionDescriptor::class.java)
     }
 
@@ -218,22 +220,22 @@ open class LazyClassMemberScope(
         }
     }
 
+    private fun addSyntheticCompanionObject(result: MutableCollection<DeclarationDescriptor>, location: LookupLocation) {
+        if (!thisDescriptor.extensionNeedsSyntheticCompanionObject()) return
+
+        val descriptor = getClassDescriptor(SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT, location)
+        if (descriptor != null)
+            result.add(descriptor)
+    }
+
     private fun generateSyntheticCompanionObject(name: Name, result: MutableSet<ClassDescriptor>) {
-        if (!thisDescriptor.needsSyntheticCompanionObject()) return
+        if (!thisDescriptor.extensionNeedsSyntheticCompanionObject()) return
 
         if (name == SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT && result.none { it.isCompanionObject }) {
             // forces creation of companion object if needed
             val companionObjectDescriptor = thisDescriptor.companionObjectDescriptor ?: return
             result.add(companionObjectDescriptor)
         }
-    }
-
-    private fun generateSyntheticMethods(
-            result: MutableCollection<SimpleFunctionDescriptor>,
-            name: Name,
-            fromSupertypes: List<SimpleFunctionDescriptor>
-    ) {
-        KSerializerDescriptorResolver.generateSerializerMethods(thisDescriptor, fromSupertypes, name, result)
     }
 
     override fun getContributedVariables(name: Name, location: LookupLocation): Collection<PropertyDescriptor> {
@@ -300,14 +302,6 @@ open class LazyClassMemberScope(
                     extractor.extract(type, name)
         }
         return DelegationResolver.generateDelegatedMembers(classOrObject, thisDescriptor, existingDescriptors, trace, lazyMemberExtractor, lazyTypeResolver)
-    }
-
-    private fun addSyntheticCompanionObject(result: MutableCollection<DeclarationDescriptor>, location: LookupLocation) {
-        if (!thisDescriptor.needsSyntheticCompanionObject()) return
-
-        val descriptor = getClassDescriptor(SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT, location)
-        if (descriptor != null)
-            result.add(descriptor)
     }
 
     private fun addDataClassMethods(result: MutableCollection<DeclarationDescriptor>, location: LookupLocation) {

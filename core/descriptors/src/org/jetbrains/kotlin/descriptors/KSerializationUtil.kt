@@ -60,7 +60,7 @@ internal val Annotations.serializer: KotlinType?
         }
     }
 
-internal val ClassDescriptor.isDefaultSerializable: Boolean
+val ClassDescriptor.isDefaultSerializable: Boolean
     get() = annotations.hasAnnotation(serializableFqName) && annotations.serializer == null
 
 // serializer that was declared for this type

@@ -32,8 +32,7 @@ import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.descriptors.annotations.Annotations;
 import org.jetbrains.kotlin.descriptors.impl.ClassDescriptorBase;
 import org.jetbrains.kotlin.descriptors.impl.FunctionDescriptorImpl;
-import org.jetbrains.kotlin.fir.FirClassOrObject;
-import org.jetbrains.kotlin.fir.SyntheticClassOrObject;
+import org.jetbrains.kotlin.fir.SyntheticClassOrObjectDescriptor;
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.kotlin.name.Name;
@@ -49,7 +48,6 @@ import org.jetbrains.kotlin.resolve.lazy.data.KtClassLikeInfo;
 import org.jetbrains.kotlin.resolve.lazy.data.KtClassOrObjectInfo;
 import org.jetbrains.kotlin.resolve.lazy.data.KtObjectInfo;
 import org.jetbrains.kotlin.resolve.lazy.declarations.ClassMemberDeclarationProvider;
-import org.jetbrains.kotlin.resolve.lazy.declarations.SyntheticClassMemberDeclarationProvider;
 import org.jetbrains.kotlin.resolve.scopes.LexicalScope;
 import org.jetbrains.kotlin.resolve.scopes.MemberScope;
 import org.jetbrains.kotlin.resolve.scopes.StaticScopeForKotlinEnum;
@@ -69,9 +67,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static kotlin.collections.CollectionsKt.firstOrNull;
-import static org.jetbrains.kotlin.descriptors.Synthetics.needsSyntheticCompanionObject;
+import static org.jetbrains.kotlin.descriptors.Visibilities.PUBLIC;
 import static org.jetbrains.kotlin.diagnostics.Errors.CYCLIC_INHERITANCE_HIERARCHY;
 import static org.jetbrains.kotlin.diagnostics.Errors.TYPE_PARAMETERS_IN_ENUM;
+import static org.jetbrains.kotlin.fir.SyntheticExtensionsKt.extensionNeedsSyntheticCompanionObject;
 import static org.jetbrains.kotlin.resolve.BindingContext.TYPE;
 import static org.jetbrains.kotlin.resolve.ModifiersChecker.*;
 
@@ -86,7 +85,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
     private final LazyClassContext c;
 
     @Nullable // can be null in KtScript
-    private final FirClassOrObject correspondingClassOrObject;
+    private final KtClassOrObject classOrObject;
 
     private final ClassMemberDeclarationProvider declarationProvider;
 
@@ -99,7 +98,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
     private final Annotations annotations;
     private final Annotations danglingAnnotations;
-    private final NullableLazyValue<LazyClassDescriptor> companionObjectDescriptor;
+    private final NullableLazyValue<ClassDescriptorWithResolutionScopes> companionObjectDescriptor;
     private final MemoizedFunctionToNotNull<KtObjectDeclaration, ClassDescriptor> extraCompanionObjectDescriptors;
 
     private final LazyClassMemberScope unsubstitutedMemberScope;
@@ -114,71 +113,46 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
     private final NotNullLazyValue<LexicalScope> scopeForInitializerResolution;
 
     public LazyClassDescriptor(
-            @NotNull LazyClassContext c,
-            @NotNull DeclarationDescriptor containingDeclaration,
-            @NotNull Name name,
-            @NotNull KtClassLikeInfo classLikeInfo
-    ) {
-        this(c, containingDeclaration, name,
-             KotlinSourceElementKt.toSourceElement(classLikeInfo.getCorrespondingClassOrObject()),
-             classLikeInfo.getClassKind(),
-             classLikeInfo instanceof KtObjectInfo && ((KtObjectInfo) classLikeInfo).isCompanionObject(),
-             classLikeInfo.getModifierList(),
-             classLikeInfo.getDanglingAnnotations(),
-             classLikeInfo.getPrimaryConstructorParameters(),
-             c.getDeclarationProviderFactory().getClassMemberDeclarationProvider(classLikeInfo),
-             classLikeInfo.getCorrespondingClassOrObject()
-        );
-    }
-
-    // With this constructor we can create synthetic class descriptor that was not present in PSI (no KtClassLikeInfo!)
-    public LazyClassDescriptor(
             @NotNull final LazyClassContext c,
             @NotNull DeclarationDescriptor containingDeclaration,
             @NotNull Name name,
-            SourceElement source,
-            @NotNull ClassKind kind,
-            boolean isCompanionObject,
-            @Nullable KtModifierList modifierList,
-            @NotNull List<KtAnnotationEntry> danglingAnnotations,
-            @NotNull final List<? extends KtParameter> primaryConstructorParameters,
-            @NotNull ClassMemberDeclarationProvider declarationProvider,
-            @Nullable FirClassOrObject correspondingClassOrObject // can be null in KtScript
-
+            @NotNull final KtClassLikeInfo classLikeInfo
     ) {
-        super(c.getStorageManager(), containingDeclaration, name, source);
-
+        super(c.getStorageManager(), containingDeclaration, name,
+              KotlinSourceElementKt.toSourceElement(classLikeInfo.getCorrespondingClassOrObject())
+        );
         this.c = c;
-        this.correspondingClassOrObject = correspondingClassOrObject;
 
-        if (correspondingClassOrObject instanceof PsiElement) {
-            this.c.getTrace().record(BindingContext.CLASS, (PsiElement)correspondingClassOrObject, this);
+        classOrObject = classLikeInfo.getCorrespondingClassOrObject();
+        if (classOrObject != null) {
+            this.c.getTrace().record(BindingContext.CLASS, classOrObject, this);
         }
         this.c.getTrace().record(BindingContext.FQNAME_TO_CLASS_DESCRIPTOR, DescriptorUtils.getFqName(this), this);
 
-        this.declarationProvider = declarationProvider;
+        this.declarationProvider = c.getDeclarationProviderFactory().getClassMemberDeclarationProvider(classLikeInfo);
 
         StorageManager storageManager = c.getStorageManager();
 
         this.unsubstitutedMemberScope = createMemberScope(c, this.declarationProvider);
-        this.kind = kind;
-        this.staticScope = this.kind == ClassKind.ENUM_CLASS ? new StaticScopeForKotlinEnum(storageManager, this) : MemberScope.Empty.INSTANCE;
+        this.kind = classLikeInfo.getClassKind();
+        this.staticScope = kind == ClassKind.ENUM_CLASS ? new StaticScopeForKotlinEnum(storageManager, this) : MemberScope.Empty.INSTANCE;
 
         this.typeConstructor = new LazyClassTypeConstructor();
 
-        this.isCompanionObject = isCompanionObject;
+        this.isCompanionObject = classLikeInfo instanceof KtObjectInfo && ((KtObjectInfo) classLikeInfo).isCompanionObject();
 
-        if (this.kind.isSingleton()) {
+        KtModifierList modifierList = classLikeInfo.getModifierList();
+        if (kind.isSingleton()) {
             this.modality = Modality.FINAL;
         }
         else {
-            Modality defaultModality = this.kind == ClassKind.INTERFACE ? Modality.ABSTRACT : Modality.FINAL;
+            Modality defaultModality = kind == ClassKind.INTERFACE ? Modality.ABSTRACT : Modality.FINAL;
             this.modality = resolveModalityFromModifiers(modifierList, defaultModality, /* allowSealed = */ true);
         }
 
-        boolean isLocal = correspondingClassOrObject instanceof KtDeclaration && KtPsiUtil.isLocal((KtDeclaration)correspondingClassOrObject);
+        boolean isLocal = classOrObject != null && KtPsiUtil.isLocal(classOrObject);
         Visibility defaultVisibility;
-        if (this.kind == ClassKind.ENUM_ENTRY || (this.kind == ClassKind.OBJECT && this.isCompanionObject)) {
+        if (kind == ClassKind.ENUM_ENTRY || (kind == ClassKind.OBJECT && isCompanionObject)) {
             defaultVisibility = Visibilities.PUBLIC;
         }
         else {
@@ -191,9 +165,9 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
         // Annotation entries are taken from both own annotations (if any) and object literal annotations (if any)
         List<KtAnnotationEntry> annotationEntries = new ArrayList<KtAnnotationEntry>();
-        if (correspondingClassOrObject != null && correspondingClassOrObject.getParent() instanceof KtObjectLiteralExpression) {
+        if (classOrObject != null && classOrObject.getParent() instanceof KtObjectLiteralExpression) {
             // TODO: it would be better to have separate ObjectLiteralDescriptor without so much magic
-            annotationEntries.addAll(KtPsiUtilKt.getAnnotationEntries((KtObjectLiteralExpression) correspondingClassOrObject.getParent()));
+            annotationEntries.addAll(KtPsiUtilKt.getAnnotationEntries((KtObjectLiteralExpression) classOrObject.getParent()));
         }
         if (modifierList != null) {
             annotationEntries.addAll(modifierList.getAnnotationEntries());
@@ -218,7 +192,8 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
             this.annotations = Annotations.Companion.getEMPTY();
         }
 
-        if (danglingAnnotations.isEmpty()) {
+        List<KtAnnotationEntry> jetDanglingAnnotations = classLikeInfo.getDanglingAnnotations();
+        if (jetDanglingAnnotations.isEmpty()) {
             this.danglingAnnotations = Annotations.Companion.getEMPTY();
         }
         else {
@@ -234,13 +209,13 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
                             return getScopeForMemberDeclarationResolution();
                         }
                     },
-                    danglingAnnotations
+                    jetDanglingAnnotations
             );
         }
 
-        this.companionObjectDescriptor = storageManager.createNullableLazyValue(new Function0<LazyClassDescriptor>() {
+        this.companionObjectDescriptor = storageManager.createNullableLazyValue(new Function0<ClassDescriptorWithResolutionScopes>() {
             @Override
-            public LazyClassDescriptor invoke() {
+            public ClassDescriptorWithResolutionScopes invoke() {
                 return computeCompanionObjectDescriptor(getCompanionObjectIfAllowed());
             }
         });
@@ -268,8 +243,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
         this.parameters = c.getStorageManager().createLazyValue(new Function0<List<TypeParameterDescriptor>>() {
             @Override
             public List<TypeParameterDescriptor> invoke() {
-                KtClassLikeInfo classInfo = LazyClassDescriptor.this.declarationProvider.getOwnerInfo();
-                if (classInfo == null) return Collections.emptyList();
+                KtClassLikeInfo classInfo = declarationProvider.getOwnerInfo();
                 KtTypeParameterList typeParameterList = classInfo.getTypeParameterList();
                 if (typeParameterList == null) return Collections.emptyList();
 
@@ -295,14 +269,9 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
             public LexicalScope invoke() {
                 return ClassResolutionScopesSupportKt.scopeForInitializerResolution(LazyClassDescriptor.this,
                                                                                     createInitializerScopeParent(),
-                                                                                    primaryConstructorParameters);
+                                                                                    classLikeInfo.getPrimaryConstructorParameters());
             }
         });
-    }
-
-    @Nullable // can be null in KtScript
-    public FirClassOrObject getCorrespondingClassOrObject() {
-        return correspondingClassOrObject;
     }
 
     @NotNull
@@ -351,11 +320,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
     @NotNull
     protected LexicalScope getOuterScope() {
-        KtClassLikeInfo ownerInfo = declarationProvider.getOwnerInfo();
-        // todo: kludge: we know thay only LazyClassDescritpor can create children without ownerInfo using SyntheticClassMemberDeclarationProvider
-        if (ownerInfo == null)
-            return ((LazyClassDescriptor)getContainingDeclaration()).getOuterScope();
-        return c.getDeclarationScopeProvider().getResolutionScopeForDeclaration(ownerInfo.getScopeAnchor());
+        return c.getDeclarationScopeProvider().getResolutionScopeForDeclaration(declarationProvider.getOwnerInfo().getScopeAnchor());
     }
 
     @Override
@@ -434,7 +399,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
     }
 
     @Override
-    public LazyClassDescriptor getCompanionObjectDescriptor() {
+    public ClassDescriptorWithResolutionScopes getCompanionObjectDescriptor() {
         return companionObjectDescriptor.invoke();
     }
 
@@ -445,7 +410,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
         return CollectionsKt.map(
                 CollectionsKt.filter(
-                        declarationProvider.getCompanionObjects(),
+                        declarationProvider.getOwnerInfo().getCompanionObjects(),
                         new Function1<KtObjectDeclaration, Boolean>() {
                             @Override
                             public Boolean invoke(KtObjectDeclaration companionObject) {
@@ -463,7 +428,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
     }
 
     @Nullable
-    private LazyClassDescriptor computeCompanionObjectDescriptor(@Nullable KtObjectDeclaration companionObject) {
+    private ClassDescriptorWithResolutionScopes computeCompanionObjectDescriptor(@Nullable KtObjectDeclaration companionObject) {
         if (companionObject == null)
             return createSyntheticCompanionObjectDescriptor();
         KtClassLikeInfo companionObjectInfo = getCompanionObjectInfo(companionObject);
@@ -474,28 +439,23 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
         assert name != null;
         getUnsubstitutedMemberScope().getContributedClassifier(name, NoLookupLocation.WHEN_GET_COMPANION_OBJECT);
         ClassDescriptor companionObjectDescriptor = c.getTrace().get(BindingContext.CLASS, companionObject);
-        if (companionObjectDescriptor instanceof LazyClassDescriptor) {
+        if (companionObjectDescriptor instanceof ClassDescriptorWithResolutionScopes) {
             assert DescriptorUtils.isCompanionObject(companionObjectDescriptor) : "Not a companion object: " + companionObjectDescriptor;
-            return (LazyClassDescriptor) companionObjectDescriptor;
+            return (ClassDescriptorWithResolutionScopes)companionObjectDescriptor;
         }
         else {
             return null;
         }
     }
 
-    private LazyClassDescriptor createSyntheticCompanionObjectDescriptor() {
-        if (!needsSyntheticCompanionObject(this) || correspondingClassOrObject == null)
+    private ClassDescriptorWithResolutionScopes createSyntheticCompanionObjectDescriptor() {
+        if (!extensionNeedsSyntheticCompanionObject(this))
             return null;
-        Name name = SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT;
-        SyntheticClassOrObject syntheticObject = new SyntheticClassOrObject(correspondingClassOrObject, name.asString());
-        LazyClassDescriptor descriptor = new LazyClassDescriptor(c, this, name, getSource(),
-                                                                 ClassKind.OBJECT, true, null,
-                                                                 Collections.<KtAnnotationEntry>emptyList(),
-                                                                 Collections.<KtParameter>emptyList(),
-                                                                 new SyntheticClassMemberDeclarationProvider(syntheticObject),
-                                                                 syntheticObject);
-        syntheticObject.initDescriptor(descriptor);
-        return descriptor;
+        return new SyntheticClassOrObjectDescriptor(
+                /* parentClassOrObject= */ classOrObject,
+                c.getStorageManager(), this, SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT, getSource(),
+                /* outerScope= */ getOuterScope(),
+                Modality.FINAL, PUBLIC, ClassKind.OBJECT, true);
     }
 
     @Nullable
@@ -509,7 +469,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
     @Nullable
     private KtObjectDeclaration getCompanionObjectIfAllowed() {
-        KtObjectDeclaration companionObject = firstOrNull(declarationProvider.getCompanionObjects());
+        KtObjectDeclaration companionObject = firstOrNull(declarationProvider.getOwnerInfo().getCompanionObjects());
         return (companionObject != null && isCompanionObjectAllowed()) ? companionObject : null;
     }
 
@@ -718,7 +678,10 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
             return Collections.emptyList();
         }
 
-        @Nullable FirClassOrObject classOrObject = declarationProvider.getCorrespondingClassOrObject();
+        KtClassOrObject classOrObject = declarationProvider.getOwnerInfo().getCorrespondingClassOrObject();
+        if (classOrObject == null) {
+            return Collections.<KotlinType>singleton(c.getModuleDescriptor().getBuiltIns().getAnyType());
+        }
 
         List<KotlinType> allSupertypes =
                 c.getDescriptorResolver()

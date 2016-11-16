@@ -39,6 +39,7 @@ import org.jetbrains.kotlin.descriptors.annotations.CompositeAnnotations;
 import org.jetbrains.kotlin.descriptors.impl.*;
 import org.jetbrains.kotlin.diagnostics.Errors;
 import org.jetbrains.kotlin.fir.FirClassOrObject;
+import org.jetbrains.kotlin.fir.SyntheticExtensionsKt;
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.kotlin.name.FqName;
@@ -133,7 +134,7 @@ public class DescriptorResolver {
             supertypes.add(0, builtIns.getEnumType(classDescriptor.getDefaultType()));
         }
 
-        addSyntheticSupertypes(classDescriptor, supertypes);
+        SyntheticExtensionsKt.extensionAddSyntheticSupertypes(classDescriptor, supertypes);
 
         if (supertypes.isEmpty()) {
             KotlinType defaultSupertype = correspondingClassOrObject == null ? builtIns.getAnyType() :
@@ -142,10 +143,6 @@ public class DescriptorResolver {
         }
 
         return supertypes;
-    }
-
-    private void addSyntheticSupertypes(@NotNull ClassDescriptor classDescriptor, List<KotlinType> supertypes) {
-        KSerializerDescriptorResolver.addSerializerSuperType(classDescriptor, supertypes, builtIns);
     }
 
     private static void addValidSupertype(List<KotlinType> supertypes, KotlinType declaredSupertype) {
